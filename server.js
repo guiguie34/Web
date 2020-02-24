@@ -20,15 +20,16 @@ app.get("/",(request,response) => { //lorsuq'on get le root, on obtient index
     //bd.start()
 })
 
-app.post("/",(req,response) =>{
-        bd.start()
+app.post("/",async (req,response) =>{
+        await bd.start()
         console.log(req.body)
-        const rep= bd.insertTable(req.body.nom,req.body.prenom,req.body.pseudo,req.body.mail,req.body.mdp)
-        response.render("pages/header")
+        const rep = await bd.insertTable(req.body.nom, req.body.prenom, req.body.pseudo, req.body.mail, req.body.mdp)
+        console.log(rep)
+        response.render("pages/validation")
 })
 
-app.get("/header",(request,response) => { //lorsuq'on get le root, on obtient index
-    response.render("pages/header")
+app.get("/validation",(request,response) => { //lorsuq'on get le root, on obtient index
+    response.render("pages/validation")
     //bd.start()
 })
 

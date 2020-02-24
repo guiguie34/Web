@@ -47,6 +47,18 @@ async  function searchTable(id){
 
 }
 
+async  function searchTable2(id){
+
+    try{
+        const results = await client.query("select * from utilisateur where pseudoutilisateur = $1;",[id])
+        return results.rows;
+    }
+    catch (e) {
+        return []
+    }
+
+}
+
 async function insertTable(a,b,c,d,e) {
     try{
         if(a===null || a==="" || b==null || b==="" || c==null || c==="" || d===null || d==="" || e===null || e==="" ){
@@ -54,9 +66,18 @@ async function insertTable(a,b,c,d,e) {
         }
         else {
             const lecture = await searchTable(d)
+            const lecture1 = await searchTable2(c)
             if(lecture[0]===undefined) {
-                await client.query("INSERT INTO utilisateur (nomutilisateur,prenomutilisateur,dateinscriptionutilisateur,pseudoutilisateur,mailutilisateur,mdputilisateur) VALUES($1,$2,DATE(NOW()),$3,$4,$5);", [a, b, c, d, e])
-                return true
+                if(lecture1[0]===undefined) {
+                    await client.query("INSERT INTO utilisateur (nomutilisateur,prenomutilisateur,dateinscriptionutilisateur,pseudoutilisateur,mailutilisateur,mdputilisateur) VALUES($1,$2,DATE(NOW()),$3,$4,$5);", [a, b, c, d, e])
+                    return true
+                }
+                else{
+                    return false
+                }
+            }
+            else {
+                return false
             }
         }
     }

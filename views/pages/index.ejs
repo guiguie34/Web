@@ -46,12 +46,17 @@
                     <article class=" col-lg-4 col-md-4 col-sm-12 col-xs-12">
                         <form method="post">
                             <div class="form-group">
-                                <label for="message">Message</label>
-                                <input type="text" name="nom" class="form-control" id="nom" placeholder="Saisir le message">
-                                <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Saisir le message">
-                                <input type="text" name="pseudo" class="form-control" id="pseudo" placeholder="Saisir le message">
-                                <input type="text" name="mail" class="form-control" id="mail" placeholder="Saisir le message">
-                                <input type="text" name="mdp" class="form-control" id="mdp" placeholder="Saisir le message">
+                                <p><%= erreur %></p>
+                                <label for="nom">Nom</label>
+                                <input type="text" name="nom" class="form-control" id="nom" placeholder="Saisir le nom">
+                                <label for="prenom">Prenom</label>
+                                <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Saisir le prenom">
+                                <label for="pseudo">Pseudo</label>
+                                <input type="text" name="pseudo" class="form-control" id="pseudo" placeholder="Saisir le pseudo">
+                                <label for="email">E-mail</label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Saisir le mail">
+                                <label for="password">Mot de passe</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Saisir le mot de passe">
 
                             </div>
                             <button type="submit" class="btn btn-outline-success">Soumettre</button>

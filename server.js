@@ -16,16 +16,20 @@ app.use("/api/", apiRouter)
 
 //routes
 app.get("/",(request,response) => { //lorsuq'on get le root, on obtient index
-    response.render("pages/index")
+    response.render("pages/index",{erreur:""})
     //bd.start()
 })
 
 app.post("/",async (req,response) =>{
-        await bd.start()
+        await bd.connect()
         console.log(req.body)
-        const rep = await bd.insertTable(req.body.nom, req.body.prenom, req.body.pseudo, req.body.mail, req.body.mdp)
-        console.log(rep)
-        response.render("pages/validation")
+        const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
+        if(rep===true){
+            response.render("pages/validation")
+        }
+        else{
+            response.render("pages/index",{erreur:"Mauvaise opération"})
+        }
 })
 
 app.get("/validation",(request,response) => { //lorsuq'on get le root, on obtient index

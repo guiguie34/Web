@@ -31,4 +31,9 @@ app.post("/",(req,response) =>{
    // }
 })
 
+app.get("/header",(request,response) => { //lorsuq'on get le root, on obtient index
+    response.render("pages/header")
+    //bd.start()
+})
+
 app.listen(8080)

@@ -1,0 +1,81 @@
+#test {
+    font-style: italic;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.red{
+    height: 600px;
+    background-color: orange;
+}
+
+.para1{
+    font-family: 'Open Sans', sans-serif;
+}
+.text-center{
+    text-align: center;
+}
+
+.guesses{
+
+}
+
+.lastResult{
+
+}
+
+.lowOrHi{
+
+}
+td{
+    outline: 1px solid green;
+}
+
+h1{
+    font-family: "Comic Sans MS";
+    color: darkblue;
+    text-align: center;
+}
+
+h2{
+    font-family: "Comic Sans MS";
+    color: darkblue;
+    text-align: center;
+}
+#sidebar{
+    /*width: calc(30% - 10px);
+    float: left;
+    padding-right: 10px;*/
+    flex: 0 1 200px;
+}
+#sidebar1{
+    /*width: 70%;*/
+    flex: 1 0 auto;
+}
+
+#footer{
+    border: 1px solid black;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+#main{
+    display: grid;
+    grid-template-columns:  1fr 4fr;
+    /*display: flex;*/
+    justify-content: center;
+}
+
+#main:after{
+    clear: both;
+    display: block;
+    visibility: hidden;
+    height: 0;
+    content: ""; /* compatibilité*/
+}
+
+@media only screen and (max-width: 1024px){
+    #main{
+        grid-template-columns: 1fr;
+    }
+}

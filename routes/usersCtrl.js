@@ -1,6 +1,6 @@
 let bcrypt = require("bcrypt")
 let jwt = require("jsonwebtoken")
-let bd = require("../database.js")
+let bd = require("../config/database.js")
 //routes
 module.exports = {
     register: function (req,res) {
@@ -8,10 +8,9 @@ module.exports = {
         var password = req.body.password
         var nom = req.body.nom
         var prenom = req.body.prenom
-        var DN = req.body.DN
         var mail = req.body.mail
 
-        if(username == null || password ==null || nom ==null || prenom ==null || DN==null || mail==null){
+        if(username == null || password ==null || nom ==null || prenom ==null || mail==null){
             return res.status(400).json({"error":"missing"})
         }
 

@@ -7,17 +7,11 @@ const client = new Client({
     database: 'Web2'
 })
 
-start()
 
 async function start() {
     await connect()
     const lecture = await readTable()
     console.log(lecture)
-
-    const successCreate = await insertTable("guillaume","chebib","1999-12-03","guiguie34","guillame@","mdp")
-    console.log(`Creating was ${successCreate}`)
-    const successDelete= await deleteTable(1)
-    console.log(`Deleting was ${successDelete}`)
 
 }
 async function connect(){
@@ -41,10 +35,30 @@ async  function readTable(){
 
 }
 
-async function insertTable(a,b,c,d,e,f) {
+async  function searchTable(id){
+
     try{
-        await client.query("INSERT INTO utilisateur (nomutilisateur,prenomutilisateur,dateinscriptionutilisateur,pseudoutilisateur,mailutilisateur,mdputilisateur) VALUES($1,$2,$3,$4,$5,$6);",[a,b,c,d,e,f])
-        return true
+        const results = await client.query("select * from utilisateur where mailutilisateur = $1;",[id])
+        return results.rows;
+    }
+    catch (e) {
+        return []
+    }
+
+}
+
+async function insertTable(a,b,c,d,e) {
+    try{
+        if(a===null || a==="" || b==null || b==="" || c==null || c==="" || d===null || d==="" || e===null || e==="" ){
+            return false
+        }
+        else {
+            const lecture = await searchTable(d)
+            if(lecture[0]===undefined) {
+                await client.query("INSERT INTO utilisateur (nomutilisateur,prenomutilisateur,dateinscriptionutilisateur,pseudoutilisateur,mailutilisateur,mdputilisateur) VALUES($1,$2,DATE(NOW()),$3,$4,$5);", [a, b, c, d, e])
+                return true
+            }
+        }
     }
     catch (e) {
         return false

@@ -2,7 +2,7 @@ let express= require("express")
 let app= express()
 let path = require('path')
 let bodyParser = require("body-parser")
-let bd = require("./database.js")
+let bd = require("./config/database.js")
 let apiRouter = require("./apiRouter").router
 
 
@@ -21,14 +21,10 @@ app.get("/",(request,response) => { //lorsuq'on get le root, on obtient index
 })
 
 app.post("/",(req,response) =>{
-    /*if(req.body.message === undefined || req.body.message === "") {
-        response.sendStatus(503)
-    }*/
-    /*else{*/
+        bd.start()
         console.log(req.body)
-        const rep= bd.insertTable(req.body.nom,req.body.prenom,req.body.DI,req.body.pseudo,req.body.mail,req.body.mdp)
+        const rep= bd.insertTable(req.body.nom,req.body.prenom,req.body.pseudo,req.body.mail,req.body.mdp)
         response.render("pages/header")
-   // }
 })
 
 app.get("/header",(request,response) => { //lorsuq'on get le root, on obtient index

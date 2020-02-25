@@ -22,7 +22,7 @@ app.get("/register",(request,response) => { //lorsuq'on get le root, on obtient 
 })
 
 app.post("/register",async (req,response) =>{
-        console.log(req.body)
+        //console.log(req.body)
         const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
         if(rep===true){
             response.render("pages/home")

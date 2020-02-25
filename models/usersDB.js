@@ -1,4 +1,5 @@
 let bd = require("../config/database.js")
+const bcrypt = require("bcryptjs")
 
 bd.connect()
 
@@ -48,7 +49,21 @@ async function insertUtilisateur(a,b,c,d,e) {
             const lecture1 = await searchUtilisateur2(c)
             if(lecture[0]===undefined) {
                 if(lecture1[0]===undefined) {
-                    await bd.client.query("INSERT INTO utilisateur (nomutilisateur,prenomutilisateur,dateinscriptionutilisateur,pseudoutilisateur,mailutilisateur,mdputilisateur) VALUES($1,$2,DATE(NOW()),$3,$4,$5);", [a, b, c, d, e])
+                    const saltRounds = 10
+
+                    await bcrypt.genSalt(saltRounds, async function (err, salt) {
+                        if (err) {
+                            throw err
+                        } else {
+                            await bcrypt.hash(e, salt, async  function(err, hash) {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    await bd.client.query("INSERT INTO utilisateur (nomutilisateur,prenomutilisateur,dateinscriptionutilisateur,pseudoutilisateur,mailutilisateur,mdputilisateur) VALUES($1,$2,DATE(NOW()),$3,$4,$5);", [a, b, c, d, hash])
+                                }
+                            })
+                        }
+                    })
                     return true
                 }
                 else{
@@ -100,12 +115,15 @@ async function graderUtilisateur(id,val){//on change les droits en indiquant le 
 }
 async  function connexionUtilisateur(id,mdp){
     try{
-        const results = await bd.client.query("select * from utilisateur where mailutilisateur = $1 AND mdputilisateur= $2;",[id,mdp])
-        const results1 = await bd.client.query("select * from utilisateur where pseudoutilisateur = $1 AND mdputilisateur= $2;",[id,mdp])
-        console.log(results.rows)
-        console.log(results1.rows)
-        if(results.rows[0] !== undefined || results1.rows[0] !== undefined){
-            return true
+        //const results = await bd.client.query("select * from utilisateur where mailutilisateur = $1 AND mdputilisateur= $2;",[id,mdp])
+        //const results1 = await bd.client.query("select * from utilisateur where pseudoutilisateur = $1 AND mdputilisateur= $2;",[id,mdp])
+        const results = await bd.client.query("select mdputilisateur from utilisateur where pseudoutilisateur= $1;",[id])
+        const results1 = await bd.client.query("select mdputilisateur from utilisateur where mailutilisateur= $1;",[id])
+        if(results.rows[0] !== undefined ){ //par pseudo
+            return await bcrypt.compare(mdp, results.rows[0].mdputilisateur)
+        }
+        else if(results1.rows[0] !==undefined){ //par mail
+            return await bcrypt.compare(mdp, results1.rows[0].mdputilisateur)
         }
         else{
             return false

@@ -113,6 +113,25 @@ async function graderUtilisateur(id,val){//on change les droits en indiquant le 
 
     }
 }
+async  function connexionUtilisateur(id,mdp){
+
+    try{
+        const results = await client.query("select * from utilisateur where mailutilisateur = $1 AND mdputilisateur= $2;",[id,mdp])
+        const results1 = await client.query("select * from utilisateur where pseudoutilisateur = $1 AND mdputilisateur= $2;",[id,mdp])
+        console.log(results.rows)
+        console.log(results1.rows)
+        if(results.rows[0] !== undefined || results1.rows[0] !== undefined){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+    catch (e) {
+        return []
+    }
+
+}
 
 exports.connect = connect
 
@@ -122,3 +141,4 @@ exports.searchUtilisateur2= searchUtilisateur2
 exports.insertUtilisateur = insertUtilisateur
 exports.deleteUtilisateur = deleteUtilisateur
 exports.graderUtilisateur = graderUtilisateur
+exports.connexionUtilisateur = connexionUtilisateur

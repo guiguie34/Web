@@ -15,25 +15,43 @@ app.use(bodyParser.json())
 app.use("/api/", apiRouter)
 
 //routes
-app.get("/",(request,response) => { //lorsuq'on get le root, on obtient index
-    response.render("pages/index",{erreur:""})
+
+app.get("/register",(request,response) => { //lorsuq'on get le root, on obtient index
+    response.render("pages/register",{erreur:"Veuillez saisir les informations suivantes: "})
     //bd.start()
 })
 
-app.post("/",async (req,response) =>{
+app.post("/register",async (req,response) =>{
         await bd.connect()
         console.log(req.body)
         const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
         if(rep===true){
-            response.render("pages/validation")
+            response.render("pages/home")
         }
         else{
-            response.render("pages/index",{erreur:"Mauvaise opération"})
+            response.render("pages/register",{erreur:"Erreur ! Merci de renouveller votre opération"})
         }
 })
 
-app.get("/validation",(request,response) => { //lorsuq'on get le root, on obtient index
-    response.render("pages/validation")
+app.get("/",(request,response) => { //lorsuq'on get le root, on obtient index
+    response.render("pages/home")
+    //bd.start()
+})
+
+app.get("/login",(request,response) => { //lorsuq'on get le root, on obtient index
+    response.render("pages/login",{message:"Veuillez saisir vos identifiants: "})
+    //bd.start()
+})
+
+app.post("/login", async (request,response) => { //lorsuq'on get le root, on obtient index
+    await bd.connect()
+    const rep= await bd.connexionUtilisateur(request.body.mailoupseudo,request.body.password)
+    if(rep===true){
+        response.render("pages/home")
+    }
+    else{
+        response.render("pages/login",{message:"Erreur ! Identifiants non valide"})
+    }
     //bd.start()
 })
 

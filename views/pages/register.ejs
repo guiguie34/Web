@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+<%- include("header"); -%>
+<body>
+<%- include("navbar"); -%>
+<main>
+    <section>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+
+                    <article class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <form method="post">
+                            <div class="form-group">
+                                <p><%= erreur %></p>
+                                <label for="nom">Nom</label>
+                                <input type="text" name="nom" class="form-control" id="nom" placeholder="Saisir le nom">
+                                <label for="prenom">Prenom</label>
+                                <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Saisir le prenom">
+                                <label for="pseudo">Pseudo</label>
+                                <input type="text" name="pseudo" class="form-control" id="pseudo" placeholder="Saisir le pseudo">
+                                <label for="email">E-mail</label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Saisir le mail">
+                                <label for="password">Mot de passe</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Saisir le mot de passe">
+
+                            </div>
+                            <button type="submit" class="btn btn-outline-success">Soumettre</button>
+                            <button type="reset" class="btn btn-outline-warning">Reset</button>
+                        </form>
+                    </article>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+<%- include("footer");-%>
+</html>

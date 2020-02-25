@@ -53,4 +53,4 @@ app.post("/login", async (request,response) => { //lorsuq'on get le root, on obt
     //bd.start()
 })
 
-app.listen(8080)
+app.listen(process.env.PORT || 8080)

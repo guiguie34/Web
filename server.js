@@ -2,9 +2,9 @@ let express= require("express")
 let app= express()
 let path = require('path')
 let bodyParser = require("body-parser")
-let bd = require("./config/database.js")
+let bd = require("./models/usersDB.js")
 let apiRouter = require("./apiRouter").router
-
+//db puis models puis contro puis route puis serv
 
 app.set("view engine","ejs") //templates
 
@@ -22,7 +22,6 @@ app.get("/register",(request,response) => { //lorsuq'on get le root, on obtient 
 })
 
 app.post("/register",async (req,response) =>{
-        await bd.connect()
         console.log(req.body)
         const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
         if(rep===true){
@@ -44,7 +43,6 @@ app.get("/login",(request,response) => { //lorsuq'on get le root, on obtient ind
 })
 
 app.post("/login", async (request,response) => { //lorsuq'on get le root, on obtient index
-    await bd.connect()
     const rep= await bd.connexionUtilisateur(request.body.mailoupseudo,request.body.password)
     if(rep===true){
         response.render("pages/home")

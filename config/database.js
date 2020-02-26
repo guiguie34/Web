@@ -3,7 +3,7 @@ const client = new Client({
     host: 'localhost',
     port: 5432,
     user: 'postgres',
-    password: 'azerty34',
+    password: 'azerty34', //je vous invite à essayer ;)
     database: 'Web2'
 })
 

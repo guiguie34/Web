@@ -113,6 +113,22 @@ async function graderUtilisateur(id,val){//on change les droits en indiquant le 
 
     }
 }
+
+async function rankUtilisateur(id){
+    try{
+        const results = await bd.client.query("select rankutilisateur from utilisateur where pseudoutilisateur= $1;",[id])
+        const results1 = await bd.client.query("select rankutilisateur from utilisateur where mailutilisateur= $1;",[id])
+        if(results.rows[0] !== undefined ){ //par pseudo
+            return results.rows[0].rankutilisateur
+        }
+        else if(results1.rows[0] !==undefined){ //par mail
+            return results1.rows[0].rankutilisateur
+        }
+    }
+    catch (e) {
+        return []
+    }
+}
 async  function connexionUtilisateur(id,mdp){
     try{
         //const results = await bd.client.query("select * from utilisateur where mailutilisateur = $1 AND mdputilisateur= $2;",[id,mdp])
@@ -141,4 +157,5 @@ exports.searchUtilisateur2= searchUtilisateur2
 exports.insertUtilisateur = insertUtilisateur
 exports.deleteUtilisateur = deleteUtilisateur
 exports.graderUtilisateur = graderUtilisateur
+exports.rankUtilisateur = rankUtilisateur
 exports.connexionUtilisateur = connexionUtilisateur

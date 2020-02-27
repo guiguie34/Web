@@ -24,44 +24,55 @@ app.use(cookies());
 
 //routes
 
-app.get("/register",(request,response) => { //lorsuq'on get le root, on obtient index
-    response.render("pages/register",{erreur:"Veuillez saisir les informations suivantes: "})
+app.get("/register",async (request,response) => { //lorsuq'on get le root, on obtient index
+    const barre = request.cookies.token
+    const co= await tokenA.checkToken(barre,vari)
+    response.render("pages/register",{erreur:"Veuillez saisir les informations suivantes: ",co})
 })
 
 app.post("/register",async (req,response) =>{
-        //console.log(req.body)
-        const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
-        if(rep===true){
-            response.render("pages/home")
-        }
-        else{
-            response.render("pages/register",{erreur:"Erreur ! Merci de renouveller votre opération"})
-        }
+    const barre = req.cookies.token
+    const co= await tokenA.checkToken(barre,vari)
+    const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
+    if(rep===true){
+        response.redirect("/")
+    }
+    else{
+        response.render("pages/register",{erreur:"Erreur ! Merci de renouveller votre opération",co})
+    }
 })
 
-app.get("/",(request,response) => { //lorsuq'on get le root, on obtient index
-    response.render("pages/home")
+app.get("/", async (request,response) => { //lorsuq'on get le root, on obtient index
+    const barre = request.cookies.token
+    const co= await tokenA.checkToken(barre,vari)
+    response.render("pages/home",{co})
 })
 
-app.get("/login",(request,response) => { //lorsuq'on get le root, on obtient index
-    response.render("pages/login",{message:"Veuillez saisir vos identifiants: "})
+app.get("/login", async (request,response) => { //lorsuq'on get le root, on obtient index
+    const barre = request.cookies.token
+    const co= await tokenA.checkToken(barre,vari)
+    response.render("pages/login",{message:"Veuillez saisir vos identifiants: ",co})
 })
 
 app.post("/login", async (request,response) => { //lorsuq'on get le root, on obtient index
+    const barre = request.cookies.token
+    const co= await tokenA.checkToken(barre,vari)
     const rep= await bd.connexionUtilisateur(request.body.mailoupseudo,request.body.password)
     if(rep===true){
         const id=request.body.mailoupseudo
         const rank=await bd.rankUtilisateur(id)
         const token = await tokenA.setToken(id,rank,vari)
         response.cookie('token', token, { maxAge: 300* 1000 })
-        response.render("pages/home")
+        response.redirect("/")
     }
     else {
-        response.render("pages/login", {message: "Erreur ! Identifiants non valide"})
+        response.render("pages/login", {message: "Erreur ! Identifiants non valide",co})
     }
 })
 
 app.get("/profil", async (req,res) =>{
+    const barre = req.cookies.token
+    const co= await tokenA.checkToken(barre,vari)
     const token = req.cookies.token
     //console.log(token)
     if (!token) {
@@ -77,7 +88,7 @@ app.get("/profil", async (req,res) =>{
             if(token1!==false){
                 res.cookie('token', token1, { maxAge: 300* 1000 })
             }
-            res.render("pages/profil")
+            res.render("pages/profil",{co})
         }
     }
 })

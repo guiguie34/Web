@@ -3,14 +3,17 @@ let jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 
 async function setToken(id,rank,key){
-
-    const token = await jwt.sign({ id,rank }, key, {
-        algorithm: 'HS256',
-        expiresIn: 300 //5mins
-    })
-    console.log('token:', token)
-    return token
-
+    try {
+        const token = await jwt.sign({id, rank}, key, {
+            algorithm: 'HS256',
+            expiresIn: 600 //5mins
+        })
+        console.log('token:', token)
+        return token
+    }
+    catch (e) {
+        return false
+    }
 
 }
 
@@ -27,17 +30,31 @@ async function checkToken(token,key){
 }
 
 async function refreshToken(token,key){
-
-    const nowUnixSeconds = Math.round(Number(new Date()) / 1000)
-    var payload= await checkToken(token,key)
-    if (payload.exp - nowUnixSeconds > 30) {
+    try {
+        const nowUnixSeconds = Math.round(Number(new Date()) / 1000)
+        var payload = await checkToken(token, key)
+        if (payload.exp - nowUnixSeconds > 60) {
+            return false
+        } else {
+            return await setToken(payload.id, payload.rank, key)
+        }
+    }
+    catch (e) {
         return false
     }
-    else{
-        return await setToken(payload.id, payload.rank, key)
+}
+
+async function deleteToken(res){
+    try {
+        res.clearCookie("token")
+    }
+    catch (e) {
+        return false
     }
 }
+//clearCookie
 
 exports.setToken = setToken
 exports.checkToken = checkToken
 exports.refreshToken = refreshToken
+exports.deleteToken = deleteToken

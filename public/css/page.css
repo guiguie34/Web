@@ -84,3 +84,37 @@ h2{
         grid-template-columns: 1fr;
     }
 }
+
+#premier{
+    background-color: #5668EC;
+}
+
+#deuxieme{
+    background-color: #5668EC;
+}
+
+#troisieme{
+    background-color: #A9B9F6;
+}
+
+#quatrieme{
+    background-color: #FFBE00;
+}
+
+#dixhuit{
+    background-color: #FF6060;
+}
+
+#dixneuf{
+    background-color: #D31A2C;
+
+}
+
+#vingt{
+    background-color: #D31A2C;
+
+}
+
+#menuProfil{
+
+}

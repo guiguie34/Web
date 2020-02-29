@@ -4,6 +4,25 @@
 <body>
 <%- include("barre"); -%>
 
+<main>
+    <section>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <article class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p>Bienvenue sur votre espace personnel <%= pseudo %> !</p>
+                    </article>
+                </div>
+                <div class="row">
+                    <article class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <a class="btn btn-outline-info" href="/profil/modif" role="button">Modifier mes infos</a>
+                        <a role="button" class="btn btn-outline-danger" href="#" >Supprimer mon compte</a>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 
 </body>
 <%- include("footer");-%>

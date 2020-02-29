@@ -1,6 +1,6 @@
 let bd = require("../configV/database.js")
 const bcrypt = require("bcryptjs")
-
+let tok = require("../controlers/authController")
 bd.connect()
 
 async  function readUtilisateur(){
@@ -81,9 +81,10 @@ async function insertUtilisateur(a,b,c,d,e) {
 
 }
 
-async  function deleteUtilisateur(id){
+async  function deleteUtilisateur(id,res){
     try{
         await bd.client.query("delete from utilisateur where mailutilisateur= $1;",[id])
+        await tok.deleteToken(res)
         return true
     }
     catch (e) {
@@ -151,6 +152,78 @@ async  function connexionUtilisateur(id,mdp){
 
 }
 
+async function getMail(id){
+    let rep = await bd.client.query("select mailutilisateur from utilisateur where pseudoutilisateur=$1;",[id])
+    if(rep.rows[0] ===undefined){
+        return await id
+    }
+    else{
+        return await  rep.rows[0].mailutilisateur
+    }
+}
+async function upDateUtilisateur(a,b,c,d,e,token,key,res){
+
+    // nom prenom pseudo mail mdp
+    //delete tok puis recreer
+    try {
+        let payload = await tok.checkToken(token, key)
+        if (payload !== false) {
+
+            if (a !== undefined && a !== "") {
+                await bd.client.query("update utilisateur set nomutilisateur=$1 where mailutilisateur=$2;", [a, payload.id])
+
+            }
+            if (b !== undefined && b !== "") {
+                await bd.client.query("update utilisateur set prenomutilisateur=$1 where mailutilisateur=$2;", [b, payload.id])
+            }
+            if (c !== undefined && c !== "") {
+                await bd.client.query("update utilisateur set pseudoutilisateur=$1 where mailutilisateur=$2;", [c, payload.id])
+            }
+            if (d !== undefined && d !== "") {
+                const saltRounds = 10
+
+                await bcrypt.genSalt(saltRounds, async function (err, salt) {
+                    if (err) {
+                        throw err
+                    } else {
+                        await bcrypt.hash(d, salt, async function (err, hash) {
+                            if (err) {
+                                throw err
+                            } else {
+                                await bd.client.query(" update utilisateur set mdputilisateur=$1 where mailutilisateur=$2;",[hash,payload.id])
+                            }
+                        })
+                    }
+                })
+            }
+            if (e !== undefined && e !== "") {
+                await bd.client.query("update utilisateur set mailutilisateur=$1 where mailutilisateur=$2;", [e, payload.id])
+                const del = await tok.deleteToken(res)
+                if (del !== false) {
+                    let token2 = await tok.setToken(e, payload.rank, key)
+                    if(token2!==false){
+                        return token2
+                    }
+                }
+            }
+
+        }
+    }
+    catch (e) {
+        return false
+    }
+}
+
+async function getPseudo(id) {
+    try {
+        let rep = await bd.client.query("select pseudoutilisateur from utilisateur where mailutilisateur=$1;", [id])
+        return rep.rows[0].pseudoutilisateur
+    }
+    catch (e) {
+        throw e
+    }
+}
+
 exports.readUtilisateur = readUtilisateur
 exports.searchUtilisateur= searchUtilisateur
 exports.searchUtilisateur2= searchUtilisateur2
@@ -159,3 +232,6 @@ exports.deleteUtilisateur = deleteUtilisateur
 exports.graderUtilisateur = graderUtilisateur
 exports.rankUtilisateur = rankUtilisateur
 exports.connexionUtilisateur = connexionUtilisateur
+exports.updateUtilisateur = upDateUtilisateur
+exports.getMail= getMail
+exports.getPseudo = getPseudo

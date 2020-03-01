@@ -6,6 +6,8 @@ let bd = require("./models/usersDB.js")
 let tokenA = require("./controlers/authController")
 let cookies = require("cookie-parser");
 let football =require("./configV/football")
+let actu = require("./models/actualiteDB")
+
 //let fs = require("fs")
 
 //let jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -150,6 +152,7 @@ app.get("/disconnect", async (req,res) =>{
 })
 
 app.get("/classement", async(req,res) =>{
+    //let football =require("./configV/football")
     const token = req.cookies.token
     const co= await tokenA.checkToken(token,vari)
     let body= await football.getClassement()
@@ -160,5 +163,32 @@ app.get("/classement", async(req,res) =>{
     }
     res.render("pages/classement",{co,body})
 
+})
+
+app.get("/actualites", async (req,res)=>{
+    const token = req.cookies.token //on va chercher le token dans les cookies
+    const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
+    const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
+    if(token1!==false){
+        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+    }
+    let actualite = await actu.getActualite()
+    res.render("pages/actualite",{co,actualite}) //on affiche la page
+})
+
+app.get("/actualites/:id", async(req,res) =>{
+    const token = req.cookies.token //on va chercher le token dans les cookies
+    const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
+    const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
+    if(token1!==false){
+        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+    }
+    let actualite= await actu.getActualite1(req.params.id)
+    if(actualite === false){
+        res.redirect("/")
+    }
+    else{
+        res.render("pages/actualiteVrai",{co,actualite})
+    }
 })
 app.listen(process.env.PORT || 8080)

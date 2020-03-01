@@ -13,11 +13,15 @@
                         <p>Bienvenue sur votre espace personnel <%= pseudo %> !</p>
                     </article>
                 </div>
-                <div class="row">
-                    <article class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <a class="btn btn-outline-info" href="/profil/modif" role="button">Modifier mes infos</a>
-                        <a role="button" class="btn btn-outline-danger" href="#" >Supprimer mon compte</a>
-                    </article>
+                <div class="row btn-group">
+                        <a class="btn btn-outline-info btn-block" href="/profil/modif" role="button">Modifier mes infos</a>
+                        <a role="button" class="btn btn-outline-danger btn-block " href="#" >Supprimer mon compte</a>
+                        <% if(co.rank > 0){%>
+                            <a role="button" class="btn btn-outline-success btn-block " href="#" >Poster une actualité</a>
+                        <%}%>
+                        <% if(co.rank === 2){%>
+                            <a role="button" class="btn btn-outline-warning btn-block " href="#" >Gerer les utilisateurs</a>
+                        <%}%>
                 </div>
             </div>
         </div>

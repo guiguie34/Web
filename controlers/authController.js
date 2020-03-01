@@ -33,10 +33,10 @@ async function refreshToken(token,key){
     try {
         const nowUnixSeconds = Math.round(Number(new Date()) / 1000)
         var payload = await checkToken(token, key)
-        if (payload.exp - nowUnixSeconds > 60) {
-            return false
-        } else {
+        if (payload.exp - nowUnixSeconds < 60) {
             return await setToken(payload.id, payload.rank, key)
+        } else {
+            return false
         }
     }
     catch (e) {

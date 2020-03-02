@@ -37,6 +37,7 @@ async function refreshToken(token,key){
             return await setToken(payload.id, payload.rank, key)
         } else {
             return false
+
         }
     }
     catch (e) {

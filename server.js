@@ -8,6 +8,7 @@ let cookies = require("cookie-parser");
 let football =require("./configV/football")
 let actu = require("./models/actualiteDB")
 let moment = require("moment")
+let methodOverride = require('method-override');
 
 //let fs = require("fs")
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public'))); //permet de récup les 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cookies());
+app.use(methodOverride('_method',{ methods: ['POST', 'GET'] }));
 
 //routes
 
@@ -97,7 +99,8 @@ app.get("/profil", async (req,res) =>{
             if(token1!==false){
                 res.cookie('token', token1, { maxAge: 600* 1000 })
             }
-            res.render("pages/profil",{co,pseudo})
+            const user=await bd.searchUtilisateur3(co.id)
+            res.render("pages/profil",{co,pseudo,user})
         }
     }
 })
@@ -129,16 +132,27 @@ app.get("/profil/modif", async (req,res) =>{
 app.post("/profil/modif", async (req,res) =>{
 
     const token = req.cookies.token
-    const rep = await bd.updateUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo,req.body.password, req.body.email,token,vari,res)
-    if(rep===false){
-        res.redirect("/")
+    let co= await tokenA.checkToken(token,vari)
+
+    //console.log(token)
+    if (!token) {
+        return res.redirect("/")
     }
-    if(rep===undefined){ //l'email ne change pas donc pas nv token
-        res.redirect("/profil")
-    }
-    else{ //l'email à changé donc nv token
-        res.cookie('token', rep, { maxAge: 600* 1000 })
-        res.redirect("/profil")
+    else {
+        if (co === false) {
+            res.redirect("/")
+        } else {
+            const rep = await bd.updateUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.password, req.body.email, token, vari, res)
+            if (rep === false) {
+                res.redirect("/")
+            }
+            if (rep === undefined) { //l'email ne change pas donc pas nv token
+                res.redirect("/profil")
+            } else { //l'email à changé donc nv token
+                res.cookie('token', rep, {maxAge: 600 * 1000})
+                res.redirect("/profil")
+            }
+        }
     }
 })
 
@@ -209,12 +223,37 @@ app.post("/profil/adminActu/edit/:id", async(req,res) => {
     if(co ===false){
         res.redirect("/")
     }
-    if(co.rank<2){
+    if(co.rank<1){
         res.redirect("/")
     }
     else {
         //let idUser = await bd.searchUtilisateur3(co.id)
         let rep= await actu.editActualite(req.body.contenuactualite,req.body.titreactualite,req.params.id)
+        if(rep===false){
+            res.redirect("/profil/adminActu")
+        }
+        else{
+            res.redirect("/profil")
+        }
+    }
+})
+
+app.delete("/profil/adminActu/delete/:id", async(req,res) => {
+
+    const token = req.cookies.token
+    let co = await tokenA.checkToken(token, vari)
+    if(!token){
+        res.redirect("/")
+    }
+    if(co ===false){
+        res.redirect("/")
+    }
+    if(co.rank<1){
+        res.redirect("/")
+    }
+    else {
+        //let idUser = await bd.searchUtilisateur3(co.id)
+        let rep= await actu.deleteActualite(req.params.id)
         if(rep===false){
             res.redirect("/profil/adminActu")
         }
@@ -237,7 +276,7 @@ app.get("/profil/adminActu/create", async (req,res)=>{
             res.redirect("/")
         }
         else{
-            if(co.rank !==2){
+            if(co.rank < 2){
                 res.redirect("/")
             }
             else {
@@ -261,7 +300,7 @@ app.post("/profil/adminActu/create", async(req,res) => {
     if(co ===false){
         res.redirect("/")
     }
-    if(co.rank<2){
+    if(co.rank<1){
         res.redirect("/")
     }
     else {
@@ -272,6 +311,135 @@ app.post("/profil/adminActu/create", async(req,res) => {
         }
         else{
             res.redirect("/profil")
+        }
+    }
+})
+
+app.get("/profil/adminUser", async (req,res)=>{
+    const token = req.cookies.token
+    let co= await tokenA.checkToken(token,vari)
+
+    //console.log(token)
+    if (!token) {
+        res.redirect("/")
+    }
+    else{
+        if(co===false){
+            res.redirect("/")
+        }
+        else{
+            if(co.rank < 2){
+                res.redirect("/")
+            }
+            else {
+                const token1 = await tokenA.refreshToken(token, vari)
+                if (token1 !== false) {
+                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                }
+                let user= await bd.readUtilisateur()
+                res.render("pages/adminUser", {co,user})
+            }
+        }
+    }
+
+})
+
+app.get("/profil/adminUser/edit/:id", async(req,res) => {
+    const token = req.cookies.token
+    let co= await tokenA.checkToken(token,vari)
+
+    //console.log(token)
+    if (!token) {
+        res.redirect("/")
+    }
+    else{
+        if(co===false){
+            res.redirect("/")
+        }
+        else{
+            if(co.rank <2){
+                res.redirect("/")
+            }
+            else {
+                const token1 = await tokenA.refreshToken(token, vari)
+                if (token1 !== false) {
+                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                }
+                let user= await bd.searchUtilisateur4(req.params.id)
+                res.render("pages/adminUserEdit", {co,user})
+            }
+        }
+    }
+
+})
+app.post("/profil/adminUser/edit/:id", async(req,res) => {
+
+    const token = req.cookies.token
+    let co = await tokenA.checkToken(token, vari)
+    if(!token){
+        res.redirect("/")
+    }
+    if(co ===false){
+        res.redirect("/")
+    }
+    if(co.rank<2){
+        res.redirect("/")
+    }
+    else {
+        //let idUser = await bd.searchUtilisateur3(co.id)
+        let rep= await bd.updateUtilisateur2(req.params.id,req.body.pseudoutilisateur,parseInt(req.body.rankutilisateur))
+        if(rep===false){
+            res.redirect("/profil/adminUser")
+        }
+        else{
+            res.redirect("/profil")
+        }
+    }
+})
+
+app.delete("/profil/adminUser/delete/:id", async(req,res) => {
+
+    const token = req.cookies.token
+    let co = await tokenA.checkToken(token, vari)
+    if(!token){
+        res.redirect("/")
+    }
+    if(co ===false){
+        res.redirect("/")
+    }
+    if(co.rank<2){
+        res.redirect("/")
+    }
+    else {
+        //let idUser = await bd.searchUtilisateur3(co.id)
+        let rep= await bd.deleteUtilisateur2(req.params.id)
+        if(rep===false){
+            res.redirect("/profil/adminUser")
+        }
+        else{
+            res.redirect("/profil")
+        }
+    }
+})
+
+app.delete("/profil/delete/:id", async(req,res) => {
+
+    const token = req.cookies.token
+    let co = await tokenA.checkToken(token, vari)
+    if(!token){
+        res.redirect("/")
+    }
+    if(co ===false){
+        res.redirect("/")
+    }
+    else {
+        let idUser = await bd.searchUtilisateur3(co.id) //retrouve l'id à partir du token
+        let rep= await bd.deleteUtilisateur3(idUser,res) //detele l'user à partir de l'id et delete le token
+        if(rep===false){
+            res.redirect("/profil")
+        }
+        else{
+            res.redirect("/")
         }
     }
 })

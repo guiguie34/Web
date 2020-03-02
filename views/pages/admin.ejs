@@ -29,7 +29,9 @@
                                 <td><%= actua[i].titreactualite%></td>
                                 <td>
                                     <a class="btn btn-outline-info" href="/profil/adminActu/edit/<%=actua[i].idactualite %>" role="button">Editer</a>
-                                    <a role="button" class="btn btn-outline-danger" href="/profil/adminActu/delete/<%=actua[i].idactualite %>" >Supprimer</a>
+                                    <form method="POST" action="/profil/adminActu/delete/<%=actua[i].idactualite %>?_method=DELETE">
+                                        <button name="submit" type="submit" class="btn btn-outline-danger">Supprimer</button>
+                                    </form>
                                 </td>
                             </tr>
                             <%}%>

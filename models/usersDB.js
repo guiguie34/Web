@@ -39,6 +39,7 @@ async  function searchUtilisateur2(id){
 
 }
 
+
 async  function searchUtilisateur3(id){
 
     try{
@@ -49,6 +50,18 @@ async  function searchUtilisateur3(id){
         else{
             return false
         }
+    }
+    catch (e) {
+        return []
+    }
+
+}
+
+async  function searchUtilisateur4(id){
+
+    try{
+        const results = await bd.client.query("select * from utilisateur where idutilisateur = $1;",[id])
+        return results.rows;
     }
     catch (e) {
         return []
@@ -98,7 +111,7 @@ async function insertUtilisateur(a,b,c,d,e) {
 
 }
 
-async  function deleteUtilisateur(id,res){
+async  function deleteUtilisateur(id,res){ //version user
     try{
         await bd.client.query("delete from utilisateur where mailutilisateur= $1;",[id])
         await tok.deleteToken(res)
@@ -110,12 +123,35 @@ async  function deleteUtilisateur(id,res){
     }
 }
 
+async  function deleteUtilisateur2(id){ //version admin
+    try{
+        await bd.client.query("delete from utilisateur where idutilisateur= $1;",[id])
+        return true
+    }
+    catch (e) {
+        return false
+
+    }
+}
+
+async  function deleteUtilisateur3(id,res){ //version user profil
+    try{
+        await bd.client.query("delete from utilisateur where idutilisateur= $1;",[id])
+        await tok.deleteToken(res)
+        return true
+    }
+    catch (e) {
+        return false
+
+    }
+}
+
 async function graderUtilisateur(id,val){//on change les droits en indiquant le pseudo
     try{
-        const lecture = await searchUtilisateur2(id)
+        const lecture = await searchUtilisateur4(id)
         if(lecture[0]!==undefined) {
             if(val===0 || val ===1 || val ===2){
-                await bd.client.query("update utilisateur set rankutilisateur= $1 where pseudoutilisateur=$2;",[val,id])
+                await bd.client.query("update utilisateur set rankutilisateur= $1 where idutilisateur=$2;",[val,id])
                 return  true
             }
             else{
@@ -241,15 +277,39 @@ async function getPseudo(id) {
     }
 }
 
+async function updateUtilisateur2(id,pseudo,rank){
+    try{
+        if(id===undefined || id==="" || pseudo===undefined ||pseudo===""){
+            return false
+        }
+        else{
+            await bd.client.query("UPDATE utilisateur set pseudoutilisateur=$1 where idutilisateur=$2",[pseudo,id])
+            if(rank===2 || rank===1 || rank ===0){
+                await graderUtilisateur(id,rank)
+            }
+            else{
+                return false
+            }
+        }
+    }
+    catch (e) {
+        return false
+    }
+}
+
 exports.readUtilisateur = readUtilisateur
 exports.searchUtilisateur= searchUtilisateur
 exports.searchUtilisateur2= searchUtilisateur2
 exports.searchUtilisateur3= searchUtilisateur3
+exports.searchUtilisateur4= searchUtilisateur4
 exports.insertUtilisateur = insertUtilisateur
 exports.deleteUtilisateur = deleteUtilisateur
+exports.deleteUtilisateur2 = deleteUtilisateur2
+exports.deleteUtilisateur3 = deleteUtilisateur3
 exports.graderUtilisateur = graderUtilisateur
 exports.rankUtilisateur = rankUtilisateur
 exports.connexionUtilisateur = connexionUtilisateur
 exports.updateUtilisateur = upDateUtilisateur
+exports.updateUtilisateur2 = updateUtilisateur2
 exports.getMail= getMail
 exports.getPseudo = getPseudo

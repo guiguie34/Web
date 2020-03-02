@@ -73,7 +73,19 @@ async function getActualite2(id){
     }
 }
 
-//editer
+async function deleteActualite(id){
+    try {
+        if(id===undefined || id===""){
+            return false
+        }
+        else {
+            const rep = await bd.client.query("DELETE FROM actualite where idactualite=$1;",[id])
+        }
+    }
+    catch (e) {
+        return false
+    }
+}
 //supprimer
 
 exports.getActualite = getActualite
@@ -81,3 +93,4 @@ exports.getActualite1 = getActualite1
 exports.getActualite2 = getActualite2
 exports.editActualite = editActualite
 exports.addActualite = addActualite
+exports.deleteActualite = deleteActualite

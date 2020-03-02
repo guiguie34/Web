@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<%- include("header"); -%>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<body>
+<%- include("barre"); -%>
+
+<main>
+    <section>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                        <form method="post">
+                                <div class="form-group row">
+                                    <label class="col-4 col-form-label" for="pseudoutilisateur">Pseudo</label>
+                                    <div class="col-8">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fa fa-address-card-o"></i>
+                                                </div>
+                                            </div>
+                                            <input id="pseudoutilisateur" name="pseudoutilisateur" type="text" required="required" class="form-control" value="<%=user[0].pseudoutilisateur%>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="rankutilisateur" class="col-4 col-form-label">Rang utilisateur</label>
+                                    <div class="col-8">
+                                        <select id="rankutilisateur" name="rankutilisateur" class="custom-select" aria-describedby="rankutilisateurHelpBlock" required="required">
+                                            <% let rank=user[0].rankutilisateur%>
+                                            <%if (rank===0){%>
+                                                <option value="0" selected>Utilisateur (0)</option>
+                                            <%}else{%>
+                                                <option value="0">Utilisateur (0)</option>
+                                            <%}%>
+                                            <%if (rank===1){%>
+                                                <option value="1" selected>Moderateur (1)</option>
+                                            <%}else{%>
+                                                <option value="1">Moderateur (1)</option>
+                                            <%}%>
+                                            <%if (rank===2){%>
+                                                <option value="2" selected>Administrateur (2)</option>
+                                            <%}else{%>
+                                                <option value="2">Administrateur (2)</option>
+                                            <%}%>
+                                        </select>
+                                        <span id="rankutilisateurHelpBlock" class="form-text text-muted">Indiquer le rang à donner à l'utilisateur</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="offset-4 col-8">
+                                        <button name="submit" type="submit" class="btn btn-primary">Soumettre</button>
+                                    </div>
+                                </div>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+</body>
+<%- include("footer");-%>
+</html>

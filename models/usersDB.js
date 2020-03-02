@@ -1,4 +1,4 @@
-let bd = require("../configV/database.js")
+let bd = require("../config/database.js")
 const bcrypt = require("bcryptjs")
 let tok = require("../controlers/authController")
 bd.connect()
@@ -32,6 +32,23 @@ async  function searchUtilisateur2(id){
     try{
         const results = await bd.client.query("select * from utilisateur where pseudoutilisateur = $1;",[id])
         return results.rows;
+    }
+    catch (e) {
+        return []
+    }
+
+}
+
+async  function searchUtilisateur3(id){
+
+    try{
+        const results = await bd.client.query("select idutilisateur from utilisateur where mailutilisateur = $1;",[id])
+        if(results.rows !==undefined) {
+            return results.rows[0].idutilisateur;
+        }
+        else{
+            return false
+        }
     }
     catch (e) {
         return []
@@ -227,6 +244,7 @@ async function getPseudo(id) {
 exports.readUtilisateur = readUtilisateur
 exports.searchUtilisateur= searchUtilisateur
 exports.searchUtilisateur2= searchUtilisateur2
+exports.searchUtilisateur3= searchUtilisateur3
 exports.insertUtilisateur = insertUtilisateur
 exports.deleteUtilisateur = deleteUtilisateur
 exports.graderUtilisateur = graderUtilisateur

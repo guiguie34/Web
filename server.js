@@ -7,6 +7,7 @@ let tokenA = require("./controlers/authController")
 let cookies = require("cookie-parser");
 let football =require("./configV/football")
 let actu = require("./models/actualiteDB")
+let moment = require("moment")
 
 //let fs = require("fs")
 
@@ -36,8 +37,8 @@ app.get("/register",async (request,response) => { //lorsuq'on get le root, on ob
 })
 
 app.post("/register",async (req,response) =>{
-    //const barre = req.cookies.token
-    //const co= await tokenA.checkToken(barre,vari)
+    const barre = req.cookies.token
+    const co= await tokenA.checkToken(barre,vari)
     const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
     if(rep===true){
         response.redirect("/")
@@ -141,6 +142,140 @@ app.post("/profil/modif", async (req,res) =>{
     }
 })
 
+app.get("/profil/adminActu", async (req,res) =>{
+    const token = req.cookies.token
+    let co= await tokenA.checkToken(token,vari)
+
+    //console.log(token)
+    if (!token) {
+        res.redirect("/")
+    }
+    else{
+        if(co===false){
+            res.redirect("/")
+        }
+        else{
+            if(co.rank < 1){
+                res.redirect("/")
+            }
+            else {
+                const token1 = await tokenA.refreshToken(token, vari)
+                if (token1 !== false) {
+                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                }
+                let actua= await actu.getActualite()
+                res.render("pages/admin", {co,actua})
+            }
+        }
+    }
+})
+
+app.get("/profil/adminActu/edit/:id", async(req,res) => {
+    const token = req.cookies.token
+    let co= await tokenA.checkToken(token,vari)
+
+    //console.log(token)
+    if (!token) {
+        res.redirect("/")
+    }
+    else{
+        if(co===false){
+            res.redirect("/")
+        }
+        else{
+            if(co.rank <1){
+                res.redirect("/")
+            }
+            else {
+                const token1 = await tokenA.refreshToken(token, vari)
+                if (token1 !== false) {
+                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                }
+                let actua= await actu.getActualite2(req.params.id)
+                res.render("pages/adminactuedit", {co,actua})
+            }
+        }
+    }
+
+})
+
+app.post("/profil/adminActu/edit/:id", async(req,res) => {
+
+    const token = req.cookies.token
+    let co = await tokenA.checkToken(token, vari)
+    if(!token){
+        res.redirect("/")
+    }
+    if(co ===false){
+        res.redirect("/")
+    }
+    if(co.rank<2){
+        res.redirect("/")
+    }
+    else {
+        //let idUser = await bd.searchUtilisateur3(co.id)
+        let rep= await actu.editActualite(req.body.contenuactualite,req.body.titreactualite,req.params.id)
+        if(rep===false){
+            res.redirect("/profil/adminActu")
+        }
+        else{
+            res.redirect("/profil")
+        }
+    }
+})
+
+app.get("/profil/adminActu/create", async (req,res)=>{
+    const token = req.cookies.token
+    let co= await tokenA.checkToken(token,vari)
+
+    //console.log(token)
+    if (!token) {
+        res.redirect("/")
+    }
+    else{
+        if(co===false){
+            res.redirect("/")
+        }
+        else{
+            if(co.rank !==2){
+                res.redirect("/")
+            }
+            else {
+                const token1 = await tokenA.refreshToken(token, vari)
+                if (token1 !== false) {
+                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                }
+                res.render("pages/adminactucreate", {co})
+            }
+        }
+    }
+})
+
+app.post("/profil/adminActu/create", async(req,res) => {
+
+    const token = req.cookies.token
+    let co = await tokenA.checkToken(token, vari)
+    if(!token){
+        res.redirect("/")
+    }
+    if(co ===false){
+        res.redirect("/")
+    }
+    if(co.rank<2){
+        res.redirect("/")
+    }
+    else {
+        let idUser = await bd.searchUtilisateur3(co.id)
+        let rep= await actu.addActualite(req.body.contenuactualite,req.body.titreactualite,idUser)
+        if(rep===false){
+            res.redirect("/profil/adminActu")
+        }
+        else{
+            res.redirect("/profil")
+        }
+    }
+})
+
 app.get("/disconnect", async (req,res) =>{
     const token = req.cookies.token
     if (!token) {
@@ -150,6 +285,9 @@ app.get("/disconnect", async (req,res) =>{
     res.redirect("/")
 
 })
+
+
+
 
 app.get("/classement", async(req,res) =>{
     //let football =require("./configV/football")
@@ -188,7 +326,8 @@ app.get("/actualites/:id", async(req,res) =>{
         res.redirect("/")
     }
     else{
-        res.render("pages/actualiteVrai",{co,actualite})
+        res.render("pages/actualiteVrai",{co,actualite,moment})
     }
 })
+
 app.listen(process.env.PORT || 8080)

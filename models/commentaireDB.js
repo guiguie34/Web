@@ -31,9 +31,9 @@ async function addCommentaire(idU,idA,contenu){
     }
 }
 
-async function deleteCommentaire(idU,idA){ //tout les commentaires de l'auteur sur le post
+async function deleteCommentaire(idA){ //tout les commentaires
     try{
-        await bd.client.query("DELETE FROM commentaire WHERE idactualite=$1 AND idutilisateur=$2;",[idA,idU])
+        await bd.client.query("DELETE FROM commentaire WHERE idactualite=$1;",[idA])
     }
     catch (e) {
         throw e

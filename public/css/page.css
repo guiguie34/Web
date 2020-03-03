@@ -31,11 +31,7 @@
     outline: 1px solid green;
 }*/
 
-h1{
-    font-family: 'Open Sans', sans-serif;
-    color: darkblue;
-    text-align: center;
-}
+
 
 main{
     margin-top: 50px;
@@ -117,4 +113,40 @@ h2{
 
 #menuProfil{
 
+}
+
+.img{
+    width: 50%;
+
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.center1{
+    text-align: center;
+    margin: 5%;
+}
+
+.police { color: #133337 ; font-family: 'Lucida Sans', Arial, sans-serif; font-size: 16px; line-height: 26px; text-indent: 30px; margin: 0; }
+
+.bodyColor{
+    background: url("../images/orange.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+}
+
+textarea {
+    resize: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
 }

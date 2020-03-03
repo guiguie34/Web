@@ -7,8 +7,12 @@ let tokenA = require("./controlers/authController")
 let cookies = require("cookie-parser");
 let football =require("./configV/football")
 let actu = require("./models/actualiteDB")
+let commentaire = require("./models/commentaireDB")
+let categ = require("./models/categorieDB")
+let appartenir = require("./models/appartenirDB")
 let moment = require("moment")
 let methodOverride = require('method-override');
+
 
 //let fs = require("fs")
 
@@ -281,10 +285,11 @@ app.get("/profil/adminActu/create", async (req,res)=>{
             }
             else {
                 const token1 = await tokenA.refreshToken(token, vari)
+                const catego = await categ.getCategorie()
                 if (token1 !== false) {
                     res.cookie('token', token1, {maxAge: 600 * 1000})
                 }
-                res.render("pages/adminactucreate", {co})
+                res.render("pages/adminactucreate", {co,catego})
             }
         }
     }
@@ -305,7 +310,17 @@ app.post("/profil/adminActu/create", async(req,res) => {
     }
     else {
         let idUser = await bd.searchUtilisateur3(co.id)
-        let rep= await actu.addActualite(req.body.contenuactualite,req.body.titreactualite,idUser)
+        let rep= await actu.addActualite(req.body.contenuactualite,req.body.titreactualite,idUser) //on ajoute l'actu et on récup son id
+        for(i in req.body.libellecategorie){ //pour toutes les catégories
+            if(req.body.libellecategorie[i]){ //si elles sont cochées
+                let rep1=await categ.getCategorie3(req.body.libellecategorie[i]) //on récup la catégorie qui correspon au libellé
+                let rep2=rep1[0].idcategorie //puis l'id
+                console.log(rep2)
+                console.log(rep.idactualite)
+                await appartenir.setAppartenir(rep.idactualite,rep2)
+            }
+
+        }
         if(rep===false){
             res.redirect("/profil/adminActu")
         }
@@ -486,6 +501,9 @@ app.get("/actualites/:id", async(req,res) =>{
     const token = req.cookies.token //on va chercher le token dans les cookies
     const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
     const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
+    const idActu = await actu.getActualite1(req.params.id)
+    const idActu1=idActu.idactualite
+    const com = await commentaire.getCommentaire(idActu1)
     if(token1!==false){
         res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
     }
@@ -494,7 +512,25 @@ app.get("/actualites/:id", async(req,res) =>{
         res.redirect("/")
     }
     else{
-        res.render("pages/actualiteVrai",{co,actualite,moment})
+        res.render("pages/actualiteVrai",{co,actualite,moment,com})
+    }
+})
+
+app.post("/actualites/:id", async(req,res) =>{
+    const token = req.cookies.token
+    let co = await tokenA.checkToken(token, vari)
+    if(!token){
+        res.redirect("/")
+    }
+    if(co ===false){
+        res.redirect("/")
+    }
+    else {
+        let idUser = await bd.searchUtilisateur3(co.id)
+        let idActu = await actu.getActualite1(req.params.id)
+        let idActu1=idActu.idactualite
+        await commentaire.addCommentaire(idUser,idActu1,req.body.contenucommentaire)
+        res.redirect("/actualites/"+req.params.id)
     }
 })
 

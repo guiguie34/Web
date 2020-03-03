@@ -256,8 +256,8 @@ app.delete("/profil/adminActu/delete/:id", async(req,res) => {
         res.redirect("/")
     }
     else {
-        let idUser = await bd.searchUtilisateur3(co.id)
-        let rep= await actu.deleteActualite(req.params.id,idUser)
+        //let idUser = await bd.searchUtilisateur3(co.id)
+        let rep= await actu.deleteActualite(req.params.id)
         if(rep===false){
             res.redirect("/profil/adminActu")
         }

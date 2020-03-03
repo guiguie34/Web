@@ -75,13 +75,13 @@ async function getActualite2(id){
     }
 }
 
-async function deleteActualite(id,idUser){
+async function deleteActualite(id){
     try {
         if(id===undefined || id==="" || idUser===undefined || idUser===""){
             return false
         }
         else {
-            await com.deleteCommentaire(idUser,id)
+            await com.deleteCommentaire(id)
             const rep = await bd.client.query("DELETE FROM actualite where idactualite=$1;",[id])
         }
     }

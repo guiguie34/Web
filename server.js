@@ -311,20 +311,27 @@ app.post("/profil/adminActu/create", async(req,res) => {
     else {
         let idUser = await bd.searchUtilisateur3(co.id)
         let rep= await actu.addActualite(req.body.contenuactualite,req.body.titreactualite,idUser) //on ajoute l'actu et on récup son id
-        for(i in req.body.libellecategorie){ //pour toutes les catégories
-            if(req.body.libellecategorie[i]){ //si elles sont cochées
-                let rep1=await categ.getCategorie3(req.body.libellecategorie[i]) //on récup la catégorie qui correspon au libellé
-                let rep2=rep1[0].idcategorie //puis l'id
-                console.log(rep2)
-                console.log(rep.idactualite)
-                await appartenir.setAppartenir(rep.idactualite,rep2)
-            }
 
-        }
         if(rep===false){
             res.redirect("/profil/adminActu")
         }
         else{
+            for(i in req.body.libellecategorie){ //pour toutes les catégories
+                if(req.body.libellecategorie[i] && (typeof req.body.libellecategorie === "string")){ //si elles sont cochées
+                    console.log(req.body.libellecategorie)
+                    let rep1=await categ.getCategorie3(req.body.libellecategorie) //on récup la catégorie qui correspon au libellé
+                    let rep2=rep1[0].idcategorie //puis l'id
+                    await appartenir.setAppartenir(rep.idactualite,rep2)
+                    break
+                } //un coché un mot, deux coché un tab
+                if(req.body.libellecategorie[i] && (typeof req.body.libellecategorie === "object")){ //si elles sont cochées
+                    let rep1=await categ.getCategorie3(req.body.libellecategorie[i]) //on récup la catégorie qui correspon au libellé
+                    let rep2=rep1[0].idcategorie //puis l'id
+                    await appartenir.setAppartenir(rep.idactualite,rep2)
+                } //un coché un mot, deux coché un tab
+
+
+            }
             res.redirect("/profil")
         }
     }

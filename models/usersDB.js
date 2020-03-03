@@ -1,6 +1,7 @@
 let bd = require("../configV/database.js")
 const bcrypt = require("bcryptjs")
 let tok = require("../controlers/authController")
+let com=require("./commentaireDB")
 bd.connect()
 
 async  function readUtilisateur(){
@@ -125,6 +126,7 @@ async  function deleteUtilisateur(id,res){ //version user
 
 async  function deleteUtilisateur2(id){ //version admin
     try{
+        await com.deleteCommentaire2(id)
         await bd.client.query("delete from utilisateur where idutilisateur= $1;",[id])
         return true
     }
@@ -136,6 +138,7 @@ async  function deleteUtilisateur2(id){ //version admin
 
 async  function deleteUtilisateur3(id,res){ //version user profil
     try{
+        await com.deleteCommentaire2(id)
         await bd.client.query("delete from utilisateur where idutilisateur= $1;",[id])
         await tok.deleteToken(res)
         return true

@@ -1,5 +1,5 @@
 let bd = require("../configV/database.js")
-
+let com = require("./commentaireDB")
 //bd.connect()
 
 async function editActualite(contenu,titre,id) {
@@ -75,12 +75,13 @@ async function getActualite2(id){
     }
 }
 
-async function deleteActualite(id){
+async function deleteActualite(id,idUser){
     try {
-        if(id===undefined || id===""){
+        if(id===undefined || id==="" || idUser===undefined || idUser===""){
             return false
         }
         else {
+            await com.deleteCommentaire(idUser,id)
             const rep = await bd.client.query("DELETE FROM actualite where idactualite=$1;",[id])
         }
     }

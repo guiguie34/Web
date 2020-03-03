@@ -38,6 +38,19 @@ async function setAppartenir(id,categ){
     }
 }
 
+async function deleteAppartenir(id){
+
+    try{
+        if(id !==undefined && id !=="" ){
+            await bd.client.query("DELETE FROM appartenir WHERE idactualite=$1;",[id])
+        }
+    }
+    catch (e) {
+        throw e
+    }
+}
+
 exports.getAppartenir = getAppartenir
 exports.getAppartenir2 = getAppartenir2
 exports.setAppartenir = setAppartenir
+exports.deleteAppartenir = deleteAppartenir

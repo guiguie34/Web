@@ -39,8 +39,16 @@ async function deleteCommentaire(idA){ //tout les commentaires
         throw e
     }
 }
-
+async function deleteCommentaire2(idU){ //tout les commentaires
+    try{
+        await bd.client.query("DELETE FROM commentaire WHERE idutilisateur=$1;",[idU])
+    }
+    catch (e) {
+        throw e
+    }
+}
 exports.getCommentaire = getCommentaire
 exports.getCommentaire2 = getCommentaire2
 exports.addCommentaire = addCommentaire
 exports.deleteCommentaire = deleteCommentaire
+exports.deleteCommentaire2 = deleteCommentaire2

@@ -25,6 +25,8 @@ async function addActualite(contenu,titre,id) {
         else {
             let titre2 = titre.replace(" ", "")
             const rep = await bd.client.query("INSERT INTO actualite(dateactualite,idutilisateur,contenuactualite,titreactualite,titreurlactualite) VALUES(NOW(),$1,$2,$3,$4);",[id,contenu,titre,titre2])
+            const rep1= await bd.client.query("SELECT idactualite FROM actualite ORDER BY idactualite DESC LIMIT 1")
+            return rep1.rows[0]
         }
     }
     catch (e) {

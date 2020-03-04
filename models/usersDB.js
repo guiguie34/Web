@@ -279,7 +279,15 @@ async function getPseudo(id) {
         throw e
     }
 }
-
+async function getPseudo2(id) {
+    try {
+        let rep = await bd.client.query("select pseudoutilisateur from utilisateur where idutilisateur=$1;", [id])
+        return rep.rows[0].pseudoutilisateur
+    }
+    catch (e) {
+        throw e
+    }
+}
 async function updateUtilisateur2(id,pseudo,rank){
     try{
         if(id===undefined || id==="" || pseudo===undefined ||pseudo===""){
@@ -316,3 +324,4 @@ exports.updateUtilisateur = upDateUtilisateur
 exports.updateUtilisateur2 = updateUtilisateur2
 exports.getMail= getMail
 exports.getPseudo = getPseudo
+exports.getPseudo2 = getPseudo2

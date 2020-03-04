@@ -45,6 +45,17 @@ async function getActualite(){
         throw e
     }
 }
+async function getActualiteDesc(){
+    try{
+        const rep= await bd.client.query("SELECT * FROM actualite ORDER BY idactualite DESC;")
+        return rep.rows
+
+    }
+    catch (e) {
+        throw e
+    }
+}
+
 
 async function getActualite1(id){
     try{
@@ -92,11 +103,33 @@ async function deleteActualite(id){
         return false
     }
 }
+
+async function libelleActualite(id){
+    try{
+        const rep = await bd.client.query("select libellecategorie from categorie INNER JOIN appartenir on appartenir.idcategorie=categorie.idcategorie INNER JOIN actualite on appartenir.idactualite=actualite.idactualite where actualite.idactualite=$1;",[id])
+        return rep.rows
+    }
+    catch (e) {
+        throw e
+    }
+}
+async function nbActualite(){
+    try{
+        const rep = await bd.client.query("select count(*) from actualite;")
+        return rep.rows[0]
+    }
+    catch (e) {
+        throw e
+    }
+}
 //supprimer
 
 exports.getActualite = getActualite
+exports.getActualiteDesc = getActualiteDesc
 exports.getActualite1 = getActualite1
 exports.getActualite2 = getActualite2
 exports.editActualite = editActualite
 exports.addActualite = addActualite
 exports.deleteActualite = deleteActualite
+exports.libelleActualite = libelleActualite
+exports.nbActualite = nbActualite

@@ -150,3 +150,7 @@ textarea {
     box-sizing: border-box;
     width: 100%;
 }
+.table {
+    margin: auto;
+    width: 75%;
+}

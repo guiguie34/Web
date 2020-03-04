@@ -12,7 +12,9 @@
                     <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2><%= actualite.titreactualite%></h2>
                         <p><%= actualite.dateactualite %></p>
-                        <p><%= actualite.contenuactualite%></p>
+                        <%let contenu = nl2br(actualite.contenuactualite)%>
+                        <p><%- contenu%></p>
+
                     </article>
                     <% if(co !== false){%>
                     <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -33,7 +35,8 @@
                     <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <p>Commentaires: </p>
                         <%for(i in com){%>
-                            <p><%= com[i].contenucommentaire%></p>
+                            <% let test1= nl2br(com[i].contenucommentaire)%>
+                            <p><%=auteur1[i]%> a dit: <%- test1%></p>
                         <%}%>
                     </article>
                 </div>

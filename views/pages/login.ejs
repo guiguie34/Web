@@ -11,7 +11,12 @@
                 <div class="row-align-self-center">
                     <article class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <form method="post">
-                        <p><%= message %></p>
+                        <% if(typeof rep !== "undefined"){ %>
+                        <% if(rep!==true){%>
+                        <div class="alert alert-danger">
+                            <strong>Erreur !</strong> Identifiants non reconnus, veuillez reassayer
+                        </div>
+                        <%}}%>
                         <div class="form-group">
                             <label for="mailoupseudo">Adresse Mail ou Pseudo</label>
                             <input type="text" class="form-control" name="mailoupseudo" id="mailoupseudo">

@@ -12,7 +12,16 @@
                     <article class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <form method="post">
                             <div class="form-group">
-                                <p><%= erreur %></p>
+                                <% if(typeof rep !== "undefined"){ %>
+                                <% if(rep===true){%>
+                                <div class="alert alert-success">
+                                    <strong>Succes !</strong> Compte crée
+                                </div>
+                                <% }else{ %>
+                                    <div class="alert alert-danger">
+                                        <strong>Erreur !</strong> Veuillez renouveller l'opération
+                                    </div>
+                                    <%}}%>
                                 <label for="nom">Nom</label>
                                 <input type="text" name="nom" class="form-control" id="nom" placeholder="Saisir le nom">
                                 <label for="prenom">Prenom</label>

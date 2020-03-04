@@ -6,12 +6,15 @@ let bd = require("./models/usersDB.js")
 let tokenA = require("./controlers/authController")
 let cookies = require("cookie-parser");
 let football =require("./configV/football")
+let football1 =require("./configV/football1")
+let football2 =require("./configV/football2")
 let actu = require("./models/actualiteDB")
 let commentaire = require("./models/commentaireDB")
 let categ = require("./models/categorieDB")
 let appartenir = require("./models/appartenirDB")
 let moment = require("moment")
 let methodOverride = require('method-override');
+let nl2br  = require('nl2br');
 
 
 //let fs = require("fs")
@@ -34,12 +37,13 @@ app.use(bodyParser.json())
 app.use(cookies());
 app.use(methodOverride('_method',{ methods: ['POST', 'GET'] }));
 
+
 //routes
 
 app.get("/register",async (request,response) => { //lorsuq'on get le root, on obtient index
     const barre = request.cookies.token
     const co= await tokenA.checkToken(barre,vari)
-    response.render("pages/register",{erreur:"Veuillez saisir les informations suivantes: ",co})
+    response.render("pages/register",{co})
 })
 
 app.post("/register",async (req,response) =>{
@@ -47,10 +51,10 @@ app.post("/register",async (req,response) =>{
     const co= await tokenA.checkToken(barre,vari)
     const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
     if(rep===true){
-        response.redirect("/")
+        response.render("pages/register",{co,rep})
     }
     else{
-        response.render("pages/register",{erreur:"Erreur ! Merci de renouveller votre opération",co})
+        response.render("pages/register",{co,rep})
     }
 })
 
@@ -80,7 +84,7 @@ app.post("/login", async (request,response) => { //lorsuq'on get le root, on obt
         response.redirect("/")
     }
     else {
-        response.render("pages/login", {message: "Erreur ! Identifiants non valide",co})
+        response.render("pages/login", {rep,co})
     }
 })
 
@@ -181,7 +185,7 @@ app.get("/profil/adminActu", async (req,res) =>{
                 if (token1 !== false) {
                     res.cookie('token', token1, {maxAge: 600 * 1000})
                 }
-                let actua= await actu.getActualite()
+                let actua= await actu.getActualiteDesc()
                 res.render("pages/admin", {co,actua})
             }
         }
@@ -500,8 +504,23 @@ app.get("/actualites", async (req,res)=>{
     if(token1!==false){
         res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
     }
-    let actualite = await actu.getActualite()
-    res.render("pages/actualite",{co,actualite}) //on affiche la page
+    let actualite = await actu.getActualiteDesc()
+    let appart= await appartenir.getAppartenir3()
+    let nbActu= await actu.nbActualite()
+    nbActu=nbActu.count
+    var tab = new Array(parseInt(nbActu));
+    for (var i = 0; i < tab.length; i++) {
+        let nb=await appartenir.nbAppartenir(actualite[i].idactualite)
+        tab[i] = new Array(nb);
+    }
+
+    for (var i = 0; i < tab.length; i++) {
+        for(var j=0;j<tab[i].length;j++){
+            tab[i][j]=await actu.libelleActualite(actualite[i].idactualite)
+        }
+    }
+
+    res.render("pages/actualite",{co,actualite,appart,tab}) //on affiche la page
 })
 
 app.get("/actualites/:id", async(req,res) =>{
@@ -519,7 +538,16 @@ app.get("/actualites/:id", async(req,res) =>{
         res.redirect("/")
     }
     else{
-        res.render("pages/actualiteVrai",{co,actualite,moment,com})
+        //const pseudo = await bd.getPseudo()
+        let auteur = []
+        for(i in com){ //on recupere les idutilisateur de ceux ayant posté un commentaire sur l'actualite donnée
+            auteur.unshift(com[i].idutilisateur) //on ajoute ces id
+        }
+        let auteur1 = []
+        for(i in auteur){
+            auteur1.unshift(await bd.getPseudo2(auteur[i])) //on obtient les pseudo à partir des id
+        }
+        res.render("pages/actualiteVrai",{co,actualite,moment,com,nl2br,auteur1}) //barre,actualité,date,commentaire,format commentaire,auteur des commentaires
     }
 })
 
@@ -541,4 +569,31 @@ app.post("/actualites/:id", async(req,res) =>{
     }
 })
 
+app.get("/stats", async (req,res) =>{
+    const token = req.cookies.token //on va chercher le token dans les cookies
+    const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
+    const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
+    if(token1!==false){
+        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+    }
+    else{
+        let stats2 = await football1.getStatsEquipe()
+        let stats= JSON.parse(stats2)
+        res.render("pages/stats",{co,stats})
+    }
+})
+
+app.get("/joueurs", async (req,res) => {
+    const token = req.cookies.token //on va chercher le token dans les cookies
+    const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
+    const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
+    if(token1!==false){
+        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+    }
+    else{
+        let player2 = await football2.allPlayers()
+        let player= JSON.parse(player2)
+        res.render("pages/joueurs",{co,player})
+    }
+})
 app.listen(process.env.PORT || 8080)

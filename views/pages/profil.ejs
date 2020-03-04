@@ -14,15 +14,15 @@
                     </article>
                 </div>
                 <div class="row btn-group">
-                        <a class="btn btn-outline-info btn-block" href="/profil/modif" role="button">Modifier mes infos</a>
+                        <a class="btn btn-outline-info" href="/profil/modif" role="button">Modifier mes infos</a>
                         <form method="POST" action="/profil/delete/<%=user %>?_method=DELETE">
-                            <button name="submit" type="submit" class="btn btn-outline-danger btn-block">Supprimer mon compte</button>
+                            <button name="submit" type="submit" class="btn btn-outline-danger">Supprimer mon compte</button>
                         </form>
                         <% if(co.rank > 0){%>
-                            <a role="button" class="btn btn-outline-success btn-block " href="/profil/adminActu" >Gerer les actualités</a>
+                            <a role="button" class="btn btn-outline-success" href="/profil/adminActu" >Gerer les actualités</a>
                         <%}%>
                         <% if(co.rank === 2){%>
-                            <a role="button" class="btn btn-outline-warning btn-block " href="/profil/adminUser" >Gerer les utilisateurs</a>
+                            <a role="button" class="btn btn-outline-warning" href="/profil/adminUser" >Gerer les utilisateurs</a>
                         <%}%>
                 </div>
             </div>

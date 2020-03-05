@@ -1,4 +1,4 @@
-let bd = require("../config/database.js")
+let bd = require("../configV/database.js")
 let com = require("./commentaireDB")
 let appartenir = require("./appartenirDB")
 //bd.connect()

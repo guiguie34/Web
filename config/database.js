@@ -3,11 +3,11 @@ const dotenv = require('dotenv').config({
     path: '../configV/log.env'
 })
 const client = new Client({ //je vous invite à essayer ;)
-    host: process.env.host1,
-    port: process.env.port1,
-    user: process.env.user1,
-    password: process.env.password1,
-    database: process.env.database1
+    host: process.env.hostt1,
+    port: process.env.portt1,
+    user: process.env.userr1,
+    password: process.env.passwordd1,
+    database: process.env.databasee1
 })
 
 async function connect(){

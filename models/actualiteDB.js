@@ -10,7 +10,7 @@ async function editActualite(contenu,titre,id) {
         }
         else {
             let titre2 = titre.replace(" ", "")
-            const rep = await bd.client.query("UPDATE actualite SET contenuactualite=$1,titreactualite=$2,titreurlactualite=$3 WHERE idactualite=$4;",[contenu,titre,titre2,id])
+            await bd.client.query("UPDATE actualite SET contenuactualite=$1,titreactualite=$2,titreurlactualite=$3 WHERE idactualite=$4;",[contenu,titre,titre2,id])
         }
     }
     catch (e) {
@@ -25,7 +25,7 @@ async function addActualite(contenu,titre,id) {
         }
         else {
             let titre2 = titre.replace(" ", "")
-            const rep = await bd.client.query("INSERT INTO actualite(dateactualite,idutilisateur,contenuactualite,titreactualite,titreurlactualite) VALUES(NOW(),$1,$2,$3,$4);",[id,contenu,titre,titre2])
+            await bd.client.query("INSERT INTO actualite(dateactualite,idutilisateur,contenuactualite,titreactualite,titreurlactualite) VALUES(NOW(),$1,$2,$3,$4);",[id,contenu,titre,titre2])
             const rep1= await bd.client.query("SELECT idactualite FROM actualite ORDER BY idactualite DESC LIMIT 1")
             return rep1.rows[0]
         }
@@ -96,7 +96,7 @@ async function deleteActualite(id){
             await com.deleteCommentaire(id)
             await appartenir.deleteAppartenir(id)
 
-            const rep = await bd.client.query("DELETE FROM actualite where idactualite=$1;",[id])
+            await bd.client.query("DELETE FROM actualite where idactualite=$1;",[id])
         }
     }
     catch (e) {

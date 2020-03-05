@@ -16,17 +16,6 @@
     text-align: center;
 }
 
-.guesses{
-
-}
-
-.lastResult{
-
-}
-
-.lowOrHi{
-
-}
 /*td{
     outline: 1px solid green;
 }*/
@@ -37,11 +26,6 @@ main{
     margin-top: 50px;
 }
 
-h2{
-    font-family: "Comic Sans MS";
-    color: darkblue;
-    text-align: center;
-}
 #sidebar{
     /*width: calc(30% - 10px);
     float: left;
@@ -111,9 +95,6 @@ h2{
 
 }
 
-#menuProfil{
-
-}
 
 .img{
     width: 50%;

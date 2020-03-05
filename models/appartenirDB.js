@@ -1,4 +1,4 @@
-let bd = require("../configV/database.js")
+let bd = require("../config/database.js")
 
 async function getAppartenir(id){
 

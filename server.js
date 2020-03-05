@@ -22,7 +22,7 @@ let nl2br  = require('nl2br');
 //let jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 //let bcrypt = require('bcryptjs');
 const dotenv = require('dotenv').config({
-    path: './configV/variables.env'
+    path: './configV/log.env'
 })
 const vari = process.env.variable
 

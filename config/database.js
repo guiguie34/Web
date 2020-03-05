@@ -1,4 +1,7 @@
 const { Client } = require('pg')
+const dotenv = require('dotenv').config({
+    path: '../configV/log.env'
+})
 const client = new Client({ //je vous invite à essayer ;)
     host: process.env.host1,
     port: process.env.port1,

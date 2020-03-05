@@ -1,10 +1,10 @@
 const { Client } = require('pg')
-const client = new Client({
-    host: 'localhost',
-    port: 5432,
-    user: 'postgres',
-    password: 'azerty34', //je vous invite à essayer ;)
-    database: 'Web2'
+const client = new Client({ //je vous invite à essayer ;)
+    host: process.env.host1,
+    port: process.env.port1,
+    user: process.env.user1,
+    password: process.env.password1,
+    database: process.env.database1
 })
 
 async function connect(){

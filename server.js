@@ -50,12 +50,7 @@ app.post("/register",async (req,response) =>{
     const barre = req.cookies.token
     const co= await tokenA.checkToken(barre,vari)
     const rep = await bd.insertUtilisateur(req.body.nom, req.body.prenom, req.body.pseudo, req.body.email, req.body.password)
-    if(rep===true){
-        response.render("pages/register",{co,rep})
-    }
-    else{
-        response.render("pages/register",{co,rep})
-    }
+    response.render("pages/register",{co,rep})
 })
 
 app.get("/", async (request,response) => { //lorsuq'on get le root, on obtient index
@@ -320,7 +315,7 @@ app.post("/profil/adminActu/create", async(req,res) => {
             res.redirect("/profil/adminActu")
         }
         else{
-            for(i in req.body.libellecategorie){ //pour toutes les catégories
+            for(let i in req.body.libellecategorie){ //pour toutes les catégories
                 if(req.body.libellecategorie[i] && (typeof req.body.libellecategorie === "string")){ //si elles sont cochées
                     console.log(req.body.libellecategorie)
                     let rep1=await categ.getCategorie3(req.body.libellecategorie) //on récup la catégorie qui correspon au libellé
@@ -509,13 +504,13 @@ app.get("/actualites", async (req,res)=>{
     let nbActu= await actu.nbActualite()
     nbActu=nbActu.count
     var tab = new Array(parseInt(nbActu));
-    for (var i = 0; i < tab.length; i++) {
+    for (let i = 0; i < tab.length; i++) {
         let nb=await appartenir.nbAppartenir(actualite[i].idactualite)
         tab[i] = new Array(nb);
     }
 
-    for (var i = 0; i < tab.length; i++) {
-        for(var j=0;j<tab[i].length;j++){
+    for (let i = 0; i < tab.length; i++) {
+        for(let j=0;j<tab[i].length;j++){
             tab[i][j]=await actu.libelleActualite(actualite[i].idactualite)
         }
     }

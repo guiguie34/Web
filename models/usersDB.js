@@ -86,9 +86,9 @@ async function insertUtilisateur(a,b,c,d,e) {
                         if (err) {
                             throw err
                         } else {
-                            await bcrypt.hash(e, salt, async  function(e, hash) {
-                                if (e) {
-                                    throw e
+                            await bcrypt.hash(e, salt, async  function(er, hash) {
+                                if (er) {
+                                    throw er
                                 } else {
                                     await bd.client.query("INSERT INTO utilisateur (nomutilisateur,prenomutilisateur,dateinscriptionutilisateur,pseudoutilisateur,mailutilisateur,mdputilisateur) VALUES($1,$2,DATE(NOW()),$3,$4,$5);", [a, b, c, d, hash])
                                 }
@@ -106,7 +106,7 @@ async function insertUtilisateur(a,b,c,d,e) {
             }
         }
     }
-    catch (e) {
+    catch (erre) {
         return false
     }
 
@@ -242,9 +242,9 @@ async function upDateUtilisateur(a,b,c,d,e,token,key,res){
                     if (err) {
                         throw err
                     } else {
-                        await bcrypt.hash(d, salt, async function (e, hash) {
-                            if (e) {
-                                throw e
+                        await bcrypt.hash(d, salt, async function (er, hash) {
+                            if (er) {
+                                throw er
                             } else {
                                 await bd.client.query(" update utilisateur set mdputilisateur=$1 where mailutilisateur=$2;",[hash,payload.id])
                             }
@@ -265,7 +265,7 @@ async function upDateUtilisateur(a,b,c,d,e,token,key,res){
 
         }
     }
-    catch (e) {
+    catch (erre) {
         return false
     }
 }

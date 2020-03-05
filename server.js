@@ -535,11 +535,11 @@ app.get("/actualites/:id", async(req,res) =>{
     else{
         //const pseudo = await bd.getPseudo()
         let auteur = []
-        for(i in com){ //on recupere les idutilisateur de ceux ayant posté un commentaire sur l'actualite donnée
+        for(let i in com){ //on recupere les idutilisateur de ceux ayant posté un commentaire sur l'actualite donnée
             auteur.unshift(com[i].idutilisateur) //on ajoute ces id
         }
         let auteur1 = []
-        for(i in auteur){
+        for(let i in auteur){
             auteur1.unshift(await bd.getPseudo2(auteur[i])) //on obtient les pseudo à partir des id
         }
         res.render("pages/actualiteVrai",{co,actualite,moment,com,nl2br,auteur1}) //barre,actualité,date,commentaire,format commentaire,auteur des commentaires

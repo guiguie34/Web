@@ -24,6 +24,7 @@ let nl2br  = require('nl2br');
 const dotenv = require('dotenv').config({
     path: './configV/log.env'
 })
+
 const vari = process.env.variable
 
 //db puis models puis contro puis route puis serv

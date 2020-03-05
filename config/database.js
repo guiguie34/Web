@@ -1,15 +1,11 @@
 const { Client } = require('pg')
-const dotenv = require('dotenv').config({
-    path: '../configV/log.env'
-})
 const client = new Client({ //je vous invite à essayer ;)
-    host: process.env.hostt1,
-    port: process.env.portt1,
-    user: process.env.userr1,
-    password: process.env.passwordd1,
-    database: process.env.databasee1
+    host: 'localhost',
+    port: '5432',
+    user: 'postgres',
+    password: 'azerty34',
+    database: 'Web2'
 })
-
 async function connect(){
     try{
         await client.connect()

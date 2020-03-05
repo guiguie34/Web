@@ -516,7 +516,7 @@ app.get("/actualites", async (req,res)=>{
         }
     }
 
-    res.render("pages/actualite",{co,actualite,appart,tab}) //on affiche la page
+    res.render("pages/actualite",{co,actualite,appart,tab,moment}) //on affiche la page
 })
 
 app.get("/actualites/:id", async(req,res) =>{

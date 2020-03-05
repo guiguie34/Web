@@ -8,7 +8,7 @@
     <section>
         <div class="container-fluid">
             <div class="container">
-                <div class="row">
+                <div class="row-align-self-center">
                     <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="police">
                             <h1 class="center1"> Espace actualités</h1>
@@ -16,7 +16,8 @@
                         </div>
                     </article>
                     <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <table class="table table-hover table-dark table-responsive mb-4">
+                        <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-4">
                             <thead>
                             <tr>
                                 <th scope="col">Titre</th>
@@ -29,15 +30,17 @@
                             <%for( i in actualite){ %>
                             <tr>
                                 <th scope="row"><%= actualite[i].titreactualite%></th>
-                                <td><%= actualite[i].dateactualite%></td>
+                                <% moment.locale("fr")%>
+                                <% let datee=moment(actualite[i].dateactualite)%>
+                                <td><%= datee.format("D MMMM YYYY")%></td>
                                 <td><a href="/actualites/<%= actualite[i].titreurlactualite%>"><%= actualite[i].titreactualite%></a></td>
                                 <td><%for(j in tab[i]){for(k in tab[i][j]){let rep = tab[i][j][k];let rep1=rep.libellecategorie%><%= rep1%> <%}}}%></td>
 
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </article>
-
                 </div>
             </div>
         </div>

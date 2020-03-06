@@ -17,10 +17,6 @@ let methodOverride = require('method-override');
 let nl2br  = require('nl2br');
 
 
-//let fs = require("fs")
-
-//let jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-//let bcrypt = require('bcryptjs');
 const dotenv = require('dotenv').config({
     path: './configV/log.env'
 })
@@ -76,7 +72,7 @@ app.post("/login", async (request,response) => { //lorsuq'on get le root, on obt
         console.log(id2)
         const rank=await bd.rankUtilisateur(id)
         const token = await tokenA.setToken(id2,rank,vari)
-        response.cookie('token', token, { maxAge: 600* 1000 })
+        response.cookie('token', token, { maxAge: 600* 1000, httpOnly: true})
         response.redirect("/")
     }
     else {
@@ -101,7 +97,7 @@ app.get("/profil", async (req,res) =>{
             let pseudo= await bd.getPseudo(pseudo1)
             const token1 = await tokenA.refreshToken(token,vari)
             if(token1!==false){
-                res.cookie('token', token1, { maxAge: 600* 1000 })
+                res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true })
             }
             const user=await bd.searchUtilisateur3(co.id)
             res.render("pages/profil",{co,pseudo,user})
@@ -125,7 +121,7 @@ app.get("/profil/modif", async (req,res) =>{
         else{
             const token1 = await tokenA.refreshToken(token,vari)
             if(token1!==false){
-                res.cookie('token', token1, { maxAge: 600* 1000 })
+                res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true })
             }
             res.render("pages/modif",{co})
 
@@ -153,7 +149,7 @@ app.post("/profil/modif", async (req,res) =>{
             if (rep === undefined) { //l'email ne change pas donc pas nv token
                 res.redirect("/profil")
             } else { //l'email à changé donc nv token
-                res.cookie('token', rep, {maxAge: 600 * 1000})
+                res.cookie('token', rep, {maxAge: 600* 1000, httpOnly: true})
                 res.redirect("/profil")
             }
         }
@@ -179,7 +175,7 @@ app.get("/profil/adminActu", async (req,res) =>{
             else {
                 const token1 = await tokenA.refreshToken(token, vari)
                 if (token1 !== false) {
-                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                    res.cookie('token', token1, {maxAge: 600* 1000, httpOnly: true})
                 }
                 let actua= await actu.getActualiteDesc()
                 res.render("pages/admin", {co,actua})
@@ -207,7 +203,7 @@ app.get("/profil/adminActu/edit/:id", async(req,res) => {
             else {
                 const token1 = await tokenA.refreshToken(token, vari)
                 if (token1 !== false) {
-                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                    res.cookie('token', token1, {maxAge: 600* 1000, httpOnly: true})
                 }
                 let actua= await actu.getActualite2(req.params.id)
                 res.render("pages/adminactuedit", {co,actua})
@@ -287,7 +283,7 @@ app.get("/profil/adminActu/create", async (req,res)=>{
                 const token1 = await tokenA.refreshToken(token, vari)
                 const catego = await categ.getCategorie()
                 if (token1 !== false) {
-                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                    res.cookie('token', token1, {maxAge: 600* 1000, httpOnly: true})
                 }
                 res.render("pages/adminactucreate", {co,catego})
             }
@@ -356,7 +352,7 @@ app.get("/profil/adminUser", async (req,res)=>{
             else {
                 const token1 = await tokenA.refreshToken(token, vari)
                 if (token1 !== false) {
-                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                    res.cookie('token', token1, {maxAge: 600* 1000, httpOnly: true})
                 }
                 let user= await bd.readUtilisateur()
                 res.render("pages/adminUser", {co,user})
@@ -385,7 +381,7 @@ app.get("/profil/adminUser/edit/:id", async(req,res) => {
             else {
                 const token1 = await tokenA.refreshToken(token, vari)
                 if (token1 !== false) {
-                    res.cookie('token', token1, {maxAge: 600 * 1000})
+                    res.cookie('token', token1, {maxAge: 600* 1000, httpOnly: true})
                 }
                 let user= await bd.searchUtilisateur4(req.params.id)
                 res.render("pages/adminUserEdit", {co,user})
@@ -487,7 +483,7 @@ app.get("/classement", async(req,res) =>{
 
     const token1 = await tokenA.refreshToken(token,vari)
     if(token1!==false){
-        res.cookie('token', token1, { maxAge: 600* 1000 })
+        res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true })
     }
     res.render("pages/classement",{co,body})
 
@@ -498,7 +494,7 @@ app.get("/actualites", async (req,res)=>{
     const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
     const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
     if(token1!==false){
-        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+        res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true}) //on met le  nouveau token dans les cookies
     }
     let actualite = await actu.getActualiteDesc()
     let appart= await appartenir.getAppartenir3()
@@ -527,7 +523,7 @@ app.get("/actualites/:id", async(req,res) =>{
     const idActu1=idActu.idactualite
     const com = await commentaire.getCommentaire(idActu1)
     if(token1!==false){
-        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+        res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true }) //on met le  nouveau token dans les cookies
     }
     let actualite= await actu.getActualite1(req.params.id)
     if(actualite === false){
@@ -570,7 +566,7 @@ app.get("/stats", async (req,res) =>{
     const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
     const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
     if(token1!==false){
-        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+        res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true }) //on met le  nouveau token dans les cookies
     }
     else{
         let stats2 = await football1.getStatsEquipe()
@@ -584,7 +580,7 @@ app.get("/joueurs", async (req,res) => {
     const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
     const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
     if(token1!==false){
-        res.cookie('token', token1, { maxAge: 600* 1000 }) //on met le  nouveau token dans les cookies
+        res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true }) //on met le  nouveau token dans les cookies
     }
     else{
         let player2 = await football2.allPlayers()
@@ -592,4 +588,7 @@ app.get("/joueurs", async (req,res) => {
         res.render("pages/joueurs",{co,player})
     }
 })
+app.use(function(req, res){
+    res.status(404).redirect("/");
+});
 app.listen(process.env.PORT || 8080)

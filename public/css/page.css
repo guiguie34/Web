@@ -135,3 +135,15 @@ textarea {
     margin: auto;
     width: 75%;
 }
+
+.commentaire{
+    background-color: rgba(245,163,80,0.40);
+}
+
+.paraH4{
+    font-size:1.5vw;
+}
+
+.paraH1{
+    font-size: 4vw;
+}

@@ -1,4 +1,4 @@
-let bd = require("../configV/database.js")
+let bd = require("../config/database.js")
 const bcrypt = require("bcryptjs")
 let tok = require("../controlers/authController")
 let com=require("./commentaireDB")

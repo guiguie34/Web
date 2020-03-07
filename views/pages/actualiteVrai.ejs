@@ -1,44 +1,58 @@
 <!doctype html>
 <html lang="fr">
 <%- include("header"); -%>
-<body>
+<body class="">
 <%- include("barre"); -%>
 
 <main>
     <section>
         <div class="container-fluid">
             <div class="container">
-                <div class="row police">
+                <div class="row">
                     <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <h2 class="text-center mb-5"><%= actualite.titreactualite%></h2>
+                        <h1 class="mt-4"><%= actualite.titreactualite%></h1>
+                        <hr>
                         <%moment.locale('fr')%>
-                        <p><%let datee= moment(actualite.dateactualite) %>publié le <%= datee.format('D MMMM YYYY')%> :</p>
+                        <p><%let datee= moment(actualite.dateactualite) %>Publié le <%= datee.format('D MMMM YYYY')%> </p>
+                        <hr>
                         <%let contenu = nl2br(actualite.contenuactualite)%>
                         <p><%- contenu%></p>
-
+                        <hr>
                     </article>
                     <% if(co !== false){%>
-                    <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="commentaire">
-                        <form method="post">
-                            <div class="form-group row">
-                                <textarea id="contenucommentaire" name="contenucommentaire" rows="8" maxlength="1000" class="form-control"></textarea>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-8">
-                                    <button name="submit" type="submit" class="btn btn-primary">Commenter</button>
+                    <article class=" col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                        <div class="">
+                            <div class="card my-4">
+                                <h5 class="card-header">Laisser un commentaire:</h5>
+                                <div class="card-body">
+                                    <form method="post">
+                                        <div class="form-group row">
+                                            <textarea id="contenucommentaire" name="contenucommentaire" rows="4" maxlength="1000" aria-describedby="commentaireHelp" class="form-control"></textarea>
+                                            <small id="commentaireHelp" class="form-text text-muted"> En postant un commentaire vous acceptez de ne pas publier de propos offensants ou diffamatoires.</small>
+                                        </div>
+                                        <button name="submit" type="submit" class="btn btn btn-outline-success">Commenter</button>
+                                    </form>
                                 </div>
                             </div>
-                        </form>
+                            <hr>
                         </div>
                     </article>
+                    <%}else{%>
+                    <article class=" col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                        <p> Veuillez vous connecter pour poster un commentaire !</p>
+                        <hr>
+                    </article>
                     <%}%>
-                    <article class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <article class=" col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p>Commentaires: </p>
                         <%for(i in com){%>
                             <% let test1= nl2br(com[i].contenucommentaire)%>
                             <% let date1= moment(com[i].datecommentaire) %>
-                            <p><%=auteur1[i]%> a dit le <%= date1.format('D MMMM YYYY')%> : <%- test1%></p>
+                            <div class="jumbotron  commentaire p-3">
+                                <p><%=auteur1[i]%> ( <%= date1.format('D MMMM YYYY')%> )</p>
+                                <p><%- test1%></p>
+                                <hr>
+                            </div>
                         <%}%>
                     </article>
                 </div>

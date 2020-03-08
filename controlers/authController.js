@@ -6,9 +6,8 @@ async function setToken(id,rank,key){
     try {
         const token = await jwt.sign({id, rank}, key, {
             algorithm: 'HS256',
-            expiresIn: 600 //5mins
+            expiresIn: 600 //10mins
         })
-        console.log('token:', token)
         return token
     }
     catch (e) {
@@ -33,7 +32,7 @@ async function refreshToken(token,key){
     try {
         const nowUnixSeconds = Math.round(Number(new Date()) / 1000)
         var payload = await checkToken(token, key)
-        if (payload.exp - nowUnixSeconds < 60) {
+        if (payload.exp - nowUnixSeconds < 300) { //5 mins
             return await setToken(payload.id, payload.rank, key)
         } else {
             return false

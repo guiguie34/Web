@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+<%- include("header"); -%>
+<body class="bodyColor">
+<%- include("barre"); -%>
+
+<main>
+    <section>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row mb-4">
+                    <h1><%= joueur.firstname%> <%=joueur.lastname%></h1>
+                </div>
+                <hr>
+
+                <%if(joueur.position === "Goalkeeper"){%>
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Informations générales
+                                    </button>
+                                </h5>
+                            </div>
+
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Age: <%= joueur.age%> </p>
+                                    <p>Nationalité: <%= joueur.nationality %> </p>
+                                    <p>Poids: <%= joueur.weight%></p>
+                                    <p>Taille: <%= joueur.height%></p>
+                                    <p>Note moyenne: <%= joueur.rating%> </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Statistiques générales
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Apparations: <%=joueur.games.appearences%></p>
+                                    <p>Titularisations: <%=joueur.games.lineups%></p>
+                                    <p>Minutes jouées: <%= joueur.games.minutes_played%></p>
+                                    <p>Buts encaissés: <%= joueur.goals.conceded%></p>
+                                    <p>Tacles: <%=joueur.tackles.total%> </p>
+                                    <p>Interceptions: <%=joueur.tackles.interceptions%> </p>
+                                    <p>Fautes commises: <%= joueur.fouls.committed%></p>
+                                    <p>Fautes subies: <%=joueur.fouls.drawn%> </p>
+                                    <p>Penalty stoppés: <%=joueur.penalty.saved%></p>
+                                    <p>Passes: <%=joueur.passes.total%> </p>
+                                    <p>Precision passes: <%= joueur.passes.accuracy%>%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <%}else{%>
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Informations générales
+                                    </button>
+                                </h5>
+                            </div>
+
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Age: <%= joueur.age%> </p>
+                                    <p>Nationalité: <%= joueur.nationality %> </p>
+                                    <p>Poids: <%= joueur.weight%></p>
+                                    <p>Taille: <%= joueur.height%></p>
+                                    <p>Note moyenne: <%= joueur.rating%> </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Statistiques générales
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Apparations: <%=joueur.games.appearences%></p>
+                                    <p>Titularisations: <%=joueur.games.lineups%></p>
+                                    <p>Minutes jouées: <%= joueur.games.minutes_played%></p>
+                                    <p>Tacles: <%=joueur.tackles.total%> </p>
+                                    <p>Interceptions: <%=joueur.tackles.interceptions%> </p>
+                                    <p>Duels gagnés/total: <%=joueur.duels.won%>/<%=joueur.duels.total%></p>
+                                    <p>Fautes commises: <%= joueur.fouls.committed%></p>
+                                    <p>Fautes subies: <%=joueur.fouls.drawn%> </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingThree">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Statistiques offensives
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Tirs tentés: <%=joueur.shots.total%></p>
+                                    <p>Tirs cadrés: <%= joueur.shots.on%></p>
+                                    <p>Buts inscrits: <%= joueur.goals.total%> </p>
+                                    <p>Passes décisives: <%= joueur.goals.assists%> </p>
+                                    <p>Dribles réussis/tentés: <%=joueur.dribbles.success%>/<%= joueur.dribbles.attempts%> </p>
+                                    <p>Passes effectuées: <%= joueur.passes.total%> </p>
+                                    <p>Passes clés: <%= joueur.passes.key%> </p>
+                                    <p>Précision passes: <%= joueur.passes.accuracy%>%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%}%>
+                <a role="button" class="btn btn-success mt-3" href="/statsJoueurs" >Retour</a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+<%- include("footer");-%>
+</html>

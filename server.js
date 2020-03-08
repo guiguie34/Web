@@ -25,7 +25,6 @@ const dotenv = require('dotenv').config({
 
 const vari = process.env.variable
 
-//db puis models puis contro puis route puis serv
 
 app.set("view engine","ejs") //templates
 
@@ -44,7 +43,7 @@ app.use(methodOverride('_method',{ methods: ['POST', 'GET'] }));
 
 //routes
 
-app.get("/register",async (request,response) => { //lorsuq'on get le root, on obtient index
+app.get("/register",async (request,response) => {
     const barre = request.cookies.token
     const co= await tokenA.checkToken(barre,vari)
     response.render("pages/register",{co})
@@ -57,26 +56,25 @@ app.post("/register",async (req,response) =>{
     response.render("pages/register",{co,rep})
 })
 
-app.get("/", async (request,response) => { //lorsuq'on get le root, on obtient index
+app.get("/", async (request,response) => {
     const barre = request.cookies.token
     const co= await tokenA.checkToken(barre,vari)
     response.render("pages/home",{co})
 })
 
-app.get("/login", async (request,response) => { //lorsuq'on get le root, on obtient index
+app.get("/login", async (request,response) => {
     const barre = request.cookies.token
     const co= await tokenA.checkToken(barre,vari)
     response.render("pages/login",{message:"Veuillez saisir vos identifiants: ",co})
 })
 
-app.post("/login", async (request,response) => { //lorsuq'on get le root, on obtient index
+app.post("/login", async (request,response) => {
     const barre = request.cookies.token
     const co= await tokenA.checkToken(barre,vari)
     const rep= await bd.connexionUtilisateur(request.body.mailoupseudo,request.body.password)
     if(rep===true){
         const id=request.body.mailoupseudo
         const id2=await bd.getMail(id)
-        console.log(id2)
         const rank=await bd.rankUtilisateur(id)
         const token = await tokenA.setToken(id2,rank,vari)
         response.cookie('token', token, { maxAge: 600* 1000, httpOnly: true})
@@ -91,7 +89,6 @@ app.get("/profil", async (req,res) =>{
 
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
-    //console.log(token)
     if (!token) {
         return res.redirect("/")
     }
@@ -117,7 +114,6 @@ app.get("/profil/modif", async (req,res) =>{
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
 
-    //console.log(token)
     if (!token) {
         return res.redirect("/")
     }
@@ -141,7 +137,6 @@ app.post("/profil/modif", async (req,res) =>{
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
 
-    //console.log(token)
     if (!token) {
         return res.redirect("/")
     }
@@ -167,7 +162,6 @@ app.get("/profil/adminActu", async (req,res) =>{
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
 
-    //console.log(token)
     if (!token) {
         res.redirect("/")
     }
@@ -195,7 +189,6 @@ app.get("/profil/adminActu/edit/:id", async(req,res) => {
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
 
-    //console.log(token)
     if (!token) {
         res.redirect("/")
     }
@@ -234,7 +227,6 @@ app.post("/profil/adminActu/edit/:id", async(req,res) => {
         res.redirect("/")
     }
     else {
-        //let idUser = await bd.searchUtilisateur3(co.id)
         let rep= await actu.editActualite(req.body.contenuactualite,req.body.titreactualite,req.params.id)
         if(rep===false){
             res.redirect("/profil/adminActu")
@@ -259,7 +251,6 @@ app.delete("/profil/adminActu/delete/:id", async(req,res) => {
         res.redirect("/")
     }
     else {
-        //let idUser = await bd.searchUtilisateur3(co.id)
         let rep= await actu.deleteActualite(req.params.id)
         if(rep===false){
             res.redirect("/profil/adminActu")
@@ -274,7 +265,6 @@ app.get("/profil/adminActu/create", async (req,res)=>{
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
 
-    //console.log(token)
     if (!token) {
         res.redirect("/")
     }
@@ -326,7 +316,7 @@ app.post("/profil/adminActu/create", async(req,res) => {
                     let rep2=rep1[0].idcategorie //puis l'id
                     await appartenir.setAppartenir(rep.idactualite,rep2)
                     break
-                } //un coché un mot, deux coché un tab
+                } //un coché un mot, deux coché un tableau
                 if(req.body.libellecategorie[i] && (typeof req.body.libellecategorie === "object")){ //si elles sont cochées
                     let rep1=await categ.getCategorie3(req.body.libellecategorie[i]) //on récup la catégorie qui correspon au libellé
                     let rep2=rep1[0].idcategorie //puis l'id
@@ -344,7 +334,6 @@ app.get("/profil/adminUser", async (req,res)=>{
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
 
-    //console.log(token)
     if (!token) {
         res.redirect("/")
     }
@@ -373,7 +362,6 @@ app.get("/profil/adminUser/edit/:id", async(req,res) => {
     const token = req.cookies.token
     let co= await tokenA.checkToken(token,vari)
 
-    //console.log(token)
     if (!token) {
         res.redirect("/")
     }
@@ -411,7 +399,6 @@ app.post("/profil/adminUser/edit/:id", async(req,res) => {
         res.redirect("/")
     }
     else {
-        //let idUser = await bd.searchUtilisateur3(co.id)
         let rep= await bd.updateUtilisateur2(req.params.id,req.body.pseudoutilisateur,parseInt(req.body.rankutilisateur))
         if(rep===false){
             res.redirect("/profil/adminUser")
@@ -436,7 +423,6 @@ app.delete("/profil/adminUser/delete/:id", async(req,res) => {
         res.redirect("/")
     }
     else {
-        //let idUser = await bd.searchUtilisateur3(co.id)
         let rep= await bd.deleteUtilisateur2(req.params.id)
         if(rep===false){
             res.redirect("/profil/adminUser")
@@ -483,7 +469,6 @@ app.get("/disconnect", async (req,res) =>{
 
 
 app.get("/classement", async(req,res) =>{
-    //let football =require("./configV/football")
     const token = req.cookies.token
     const co= await tokenA.checkToken(token,vari)
     let body= await football.getClassement()
@@ -595,7 +580,49 @@ app.get("/joueurs", async (req,res) => {
         res.render("pages/joueurs",{co,player})
     }
 })
-app.use(function(req, res){
+
+app.get("/statsJoueurs", async(req,res)=>{
+    const token = req.cookies.token //on va chercher le token dans les cookies
+    const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
+    const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
+    if(token1!==false){
+        res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true }) //on met le  nouveau token dans les cookies
+    }
+    else{
+        let player2 = await football2.allPlayers()
+        let player= JSON.parse(player2)
+        let nbJoueurs = player.api.players.length
+        res.render("pages/statsJoueur",{co,player,nbJoueurs})
+    }
+})
+
+app.get("/statsJoueurs/:id", async(req,res)=>{
+    const token = req.cookies.token //on va chercher le token dans les cookies
+    const co= await tokenA.checkToken(token,vari) //on recupère la validité du token
+    const token1 = await tokenA.refreshToken(token,vari) //on rafraichi le token si necessaire
+    if(token1!==false){
+        res.cookie('token', token1, { maxAge: 600* 1000, httpOnly: true }) //on met le  nouveau token dans les cookies
+    }
+    else{
+        let player2 = await football2.allPlayers()
+        let player= JSON.parse(player2)
+        let joueur
+        for(let i in player.api.players){
+            if(player.api.players[i].lastname.replace(" ","") === req.params.id && player.api.players[i].league ==="Ligue 1"){
+                joueur = player.api.players[i]
+            }
+        }
+        if(joueur === undefined){
+            res.redirect("/statsJoueurs")
+        }
+        else {
+            console.log(joueur)
+            res.render("pages/statsJoueurVrai", {co, player, joueur})
+        }
+    }
+})
+
+app.use(function(req, res){ //gestion erreur 404
     res.status(404).redirect("/");
 });
 app.listen(process.env.PORT || 8080)

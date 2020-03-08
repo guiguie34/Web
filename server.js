@@ -15,6 +15,8 @@ let appartenir = require("./models/appartenirDB")
 let moment = require("moment")
 let methodOverride = require('method-override');
 let nl2br  = require('nl2br');
+const helmet = require('helmet');
+
 
 
 const dotenv = require('dotenv').config({
@@ -32,6 +34,7 @@ app.use(function(req, res, next) { //accepte les scripts uniquement des liens su
     res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com https://code.jquery.com/jquery-3.2.1.slim.min.js https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js  https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js; object-src 'none'; base-uri 'self'");
     return next();
 });
+app.use(helmet.frameguard({ action: "deny" })); //configure l'en tete afin d'empecher le clickjacking
 app.use(express.static(path.join(__dirname, 'public'))); //permet de récup les fichiers statiques
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())

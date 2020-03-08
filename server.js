@@ -28,8 +28,8 @@ const vari = process.env.variable
 app.set("view engine","ejs") //templates
 
 //MiddleWare
-app.use(function(req, res, next) {
-    res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com https://code.jquery.com/jquery-3.2.1.slim.min.js https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js  https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js");
+app.use(function(req, res, next) { //accepte les scripts uniquement des liens suivants,base-uri=protection des url relatifs, object-src protege contre l'insertion de plugin executant des scripts
+    res.setHeader("Content-Security-Policy", "script-src 'self' https://apis.google.com https://code.jquery.com/jquery-3.2.1.slim.min.js https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js  https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js", "object-src 'none'", "base-uri 'self'");
     return next();
 });
 app.use(express.static(path.join(__dirname, 'public'))); //permet de récup les fichiers statiques

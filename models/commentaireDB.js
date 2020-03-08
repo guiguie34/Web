@@ -2,7 +2,7 @@ let bd = require("../configV/database.js")
 
 async function getCommentaire(id){
     try{
-        const rep = await bd.client.query("SELECT * FROM commentaire where idactualite=$1;",[id])
+        const rep = await bd.client.query("SELECT * FROM commentaire where idactualite=$1 ORDER BY idcommentaire DESC;;",[id])
         return rep.rows
     }
     catch (e) {
@@ -12,7 +12,7 @@ async function getCommentaire(id){
 
 async function getCommentaire2(id){
     try{
-        const rep = await bd.client.query("SELECT * FROM commentaire where idutilisateur=$1;",[id])
+        const rep = await bd.client.query("SELECT * FROM commentaire where idutilisateur=$1 ORDER BY idcommentaire DESC;;",[id])
         return rep.rows
     }
     catch (e) {

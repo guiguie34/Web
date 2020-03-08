@@ -20,7 +20,7 @@ const helmet = require('helmet');
 
 
 const dotenv = require('dotenv').config({
-    path: './configV/log.env'
+    path: './configV/login.env'
 })
 
 const vari = process.env.variable

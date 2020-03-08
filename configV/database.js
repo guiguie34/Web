@@ -1,6 +1,6 @@
 const { Client } = require('pg')
 const dotenv = require('dotenv').config({
-    path: './configV/log.env'
+    path: './configV/login.env'
 })
 const client = new Client({
     host:process.env.hostt1,
